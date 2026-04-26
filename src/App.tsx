@@ -59,66 +59,145 @@ function CountUp({ target, suffix = '' }: { target: number; suffix?: string }) {
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 function Nav() {
+  const [open, setOpen] = useState(false)
+
+  const links = [
+    { label: 'SOBRE', href: '#about' },
+    { label: 'STACKS', href: '#stack' },
+    { label: 'PROJETOS', href: '#projects' },
+    { label: 'CONTATO', href: '#contact' },
+  ]
+
   return (
-    <nav
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        mixBlendMode: 'difference',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '24px clamp(24px, 5vw, 80px)',
-        pointerEvents: 'none',
-      }}
-    >
-      <a
-        href="#"
+    <>
+      <nav
         style={{
-          color: C.bright,
-          fontSize: '18px',
-          fontFamily: "'Bricolage Grotesque', sans-serif",
-          fontWeight: 800,
-          textDecoration: 'none',
-          pointerEvents: 'auto',
-          textTransform: 'uppercase',
-          letterSpacing: '-0.02em',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          mixBlendMode: 'difference',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '24px clamp(24px, 5vw, 80px)',
+          pointerEvents: 'none',
         }}
       >
-        Müller<span style={{color: C.accent}}>.</span>
-      </a>
+        <a
+          href="#"
+          style={{
+            color: C.bright,
+            fontSize: '18px',
+            fontFamily: "'Bricolage Grotesque', sans-serif",
+            fontWeight: 800,
+            textDecoration: 'none',
+            pointerEvents: 'auto',
+            textTransform: 'uppercase',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          Müller<span style={{color: C.accent}}>.</span>
+        </a>
 
-      <div style={{ pointerEvents: 'auto', display: 'flex', gap: '32px' }} className="max-[640px]:hidden">
-        {[
-          { label: 'SOBRE', href: '#about' },
-          { label: 'STACKS', href: '#stack' },
-          { label: 'PROJETOS', href: '#projects' },
-          { label: 'CONTATO', href: '#contact' },
-        ].map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            style={{
-              color: C.bright,
-              fontSize: '11px',
-              textDecoration: 'none',
-              fontFamily: "'JetBrains Mono', monospace",
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'inline-block',
-            }}
-            className="nav-link"
-          >
-            {item.label}
-          </a>
-        ))}
-      </div>
-    </nav>
+        {/* Desktop links */}
+        <div style={{ pointerEvents: 'auto', gap: '32px' }} className="hidden sm:flex">
+          {links.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              style={{
+                color: C.bright,
+                fontSize: '11px',
+                textDecoration: 'none',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontWeight: 700,
+                letterSpacing: '0.1em',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'inline-block',
+              }}
+              className="nav-link"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Hamburger - mobile only */}
+        <button
+          onClick={() => setOpen(o => !o)}
+          aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+          className="flex sm:hidden"
+          style={{
+            pointerEvents: 'auto',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px',
+            flexDirection: 'column',
+            gap: '5px',
+          }}
+        >
+          <span style={{
+            width: '24px', height: '2px', backgroundColor: C.bright, display: 'block',
+            transition: 'transform 0.2s',
+            transform: open ? 'translateY(7px) rotate(45deg)' : 'none',
+          }} />
+          <span style={{
+            width: '24px', height: '2px', backgroundColor: C.bright, display: 'block',
+            transition: 'opacity 0.2s',
+            opacity: open ? 0 : 1,
+          }} />
+          <span style={{
+            width: '24px', height: '2px', backgroundColor: C.bright, display: 'block',
+            transition: 'transform 0.2s',
+            transform: open ? 'translateY(-7px) rotate(-45deg)' : 'none',
+          }} />
+        </button>
+      </nav>
+
+      {/* Mobile menu overlay */}
+      {open && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 49,
+            backgroundColor: C.bg,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          {links.map((item, i) => (
+            <motion.a
+              key={item.href}
+              href={item.href}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.07 }}
+              onClick={() => setOpen(false)}
+              style={{
+                color: C.bright,
+                fontSize: 'clamp(36px, 10vw, 56px)',
+                textDecoration: 'none',
+                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                textTransform: 'uppercase',
+                padding: '12px 0',
+              }}
+            >
+              {item.label}
+            </motion.a>
+          ))}
+        </div>
+      )}
+    </>
   )
 }
 
@@ -180,12 +259,13 @@ function Hero() {
             style={{
               fontFamily: "'Bricolage Grotesque', sans-serif",
               fontWeight: 800,
-              fontSize: 'clamp(60px, 15vw, 200px)',
+              fontSize: 'clamp(32px, 15vw, 200px)',
               color: C.bright,
               lineHeight: 0.85,
               letterSpacing: '-0.03em',
               margin: 0,
               textTransform: 'uppercase',
+              wordBreak: 'break-word',
             }}
           >
             GUILHERME
@@ -200,15 +280,16 @@ function Hero() {
             style={{
               fontFamily: "'Bricolage Grotesque', sans-serif",
               fontWeight: 800,
-              fontSize: 'clamp(60px, 15vw, 200px)',
+              fontSize: 'clamp(32px, 15vw, 200px)',
               color: 'transparent',
               WebkitTextStroke: `2px ${C.border}`,
               lineHeight: 0.85,
               letterSpacing: '-0.03em',
               margin: 0,
               textTransform: 'uppercase',
-              marginLeft: '5vw',
+              wordBreak: 'break-word',
             }}
+            className="ml-0 sm:ml-[5vw]"
           >
             MÜLLER.
           </motion.h1>
@@ -219,6 +300,7 @@ function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.6 }}
+        className="hidden sm:flex"
         style={{
           position: 'absolute',
           bottom: '40px',
@@ -230,7 +312,6 @@ function Hero() {
           textTransform: 'uppercase',
           writingMode: 'vertical-rl',
           transform: 'rotate(180deg)',
-          display: 'flex',
           alignItems: 'center',
           gap: '16px'
         }}
@@ -245,7 +326,7 @@ function Hero() {
 // ─── SectionTitle ────────────────────────────────────────────────────────────
 function SectionTitle({ num, label }: { num: string; label: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px', marginBottom: '80px' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px', marginBottom: 'clamp(40px, 6vw, 80px)' }}>
       <span style={{ color: C.accent, fontSize: '14px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
         [{num}]
       </span>
@@ -270,14 +351,14 @@ function About() {
   return (
     <section
       id="about"
-      style={{ padding: '120px clamp(24px, 5vw, 80px)', borderTop: `1px solid ${C.border}`, position: 'relative' }}
+      style={{ padding: 'clamp(60px, 10vw, 120px) clamp(24px, 5vw, 80px)', borderTop: `1px solid ${C.border}`, position: 'relative' }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <SectionTitle num="01" label="Visão Geral" />
 
         <div
-          style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '100px', alignItems: 'center' }}
-          className="max-[1024px]:grid-cols-1 max-[1024px]:gap-12"
+          style={{ gap: 'clamp(48px, 10vw, 100px)', alignItems: 'center' }}
+          className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr]"
         >
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -326,7 +407,7 @@ function About() {
                 viewport={{ once: true }}
                 style={{ 
                   backgroundColor: C.bg, 
-                  padding: '40px 32px',
+                  padding: 'clamp(16px, 3vw, 40px) clamp(12px, 2.5vw, 32px)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
@@ -336,7 +417,7 @@ function About() {
                   style={{
                     fontFamily: "'Bricolage Grotesque', sans-serif",
                     fontWeight: 800,
-                    fontSize: 'clamp(48px, 6vw, 80px)',
+                    fontSize: 'clamp(32px, 6vw, 80px)',
                     color: C.bright,
                     lineHeight: 1,
                     letterSpacing: '-0.04em',
@@ -372,19 +453,17 @@ function Stack() {
   return (
     <section
       id="stack"
-      style={{ padding: '120px clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
+      style={{ padding: 'clamp(60px, 10vw, 120px) clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <SectionTitle num="02" label="Tech Stack" />
 
         <div 
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
             borderTop: `1px solid ${C.border}`,
             borderLeft: `1px solid ${C.border}`,
           }}
-          className="max-[1024px]:grid-cols-2 max-[640px]:grid-cols-1"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
         >
           {techStacks.map((stack, idx) => (
             <motion.div 
@@ -431,11 +510,11 @@ function Stack() {
               {/* Items */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {stack.items.map((item, itemIdx) => (
-                  <div 
+                   <div 
                     key={item}
                     className="stack-item"
                     style={{
-                      padding: '24px',
+                      padding: 'clamp(16px, 2vw, 24px)',
                       borderBottom: itemIdx !== stack.items.length - 1 ? `1px solid ${C.border}` : 'none',
                       display: 'flex',
                       alignItems: 'center',
@@ -486,7 +565,7 @@ function Projects() {
   return (
     <section
       id="projects"
-      style={{ padding: '120px clamp(24px, 5vw, 80px)', backgroundColor: C.bg }}
+      style={{ padding: 'clamp(60px, 10vw, 120px) clamp(24px, 5vw, 80px)', backgroundColor: C.bg }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <SectionTitle num="03" label="Projetos" />
@@ -504,18 +583,16 @@ function Projects() {
               viewport={{ once: true, margin: "-50px" }}
               style={{
                 textDecoration: 'none',
-                display: 'grid',
-                gridTemplateColumns: '80px 1fr 1fr',
-                gap: '40px',
+                gap: 'clamp(16px, 4vw, 40px)',
                 alignItems: 'start',
-                padding: '64px 0',
+                padding: 'clamp(32px, 6vw, 64px) 0',
                 borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
                 borderBottom: `1px solid ${C.border}`,
                 position: 'relative',
               }}
-              className="project-row max-[1024px]:grid-cols-1 max-[1024px]:gap-6 max-[1024px]:py-8"
+              className="project-row grid grid-cols-1 lg:grid-cols-[80px_1fr_1fr]"
             >
-              <div style={{
+              <div className="hidden lg:block" style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '14px',
                 color: C.dim,
@@ -527,14 +604,15 @@ function Projects() {
               <div>
                 <h3 className="project-title" style={{
                   fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontSize: 'clamp(40px, 6vw, 80px)',
+                  fontSize: 'clamp(28px, 6vw, 80px)',
                   fontWeight: 800,
                   color: C.bright,
                   lineHeight: 0.9,
                   letterSpacing: '-0.02em',
                   margin: '0 0 16px 0',
                   textTransform: 'uppercase',
-                  transition: 'color 0.3s ease'
+                  transition: 'color 0.3s ease',
+                  wordBreak: 'break-word',
                 }}>
                   {p.name}
                 </h3>
@@ -584,7 +662,7 @@ function Contact() {
   return (
     <section
       id="contact"
-      style={{ padding: '160px clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
+      style={{ padding: 'clamp(80px, 12vw, 160px) clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto', textAlign: 'center' }}>
         <motion.h2
@@ -595,12 +673,13 @@ function Contact() {
           style={{
             fontFamily: "'Bricolage Grotesque', sans-serif",
             fontWeight: 800,
-            fontSize: 'clamp(48px, 10vw, 140px)',
+            fontSize: 'clamp(40px, 10vw, 140px)',
             color: C.bright,
             lineHeight: 0.9,
             letterSpacing: '-0.04em',
             margin: '0 0 24px 0',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            wordBreak: 'break-word',
           }}
         >
           Vamos<br/><span style={{ color: C.accent }}>Conversar</span>
@@ -633,12 +712,11 @@ function Contact() {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '80px',
-            padding: '0 64px',
+            padding: 'clamp(18px, 3vw, 24px) clamp(32px, 5vw, 64px)',
             backgroundColor: C.bright,
             color: C.bg,
             fontFamily: "'Bricolage Grotesque', sans-serif",
-            fontSize: '20px',
+            fontSize: 'clamp(16px, 2.5vw, 20px)',
             fontWeight: 800,
             textDecoration: 'none',
             borderRadius: '100px',
