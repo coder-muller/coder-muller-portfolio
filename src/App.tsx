@@ -832,12 +832,12 @@ function Contact() {
             transition: 'transform 0.2s, background-color 0.2s',
           }}
           onMouseEnter={(e) => {
-            ;(e.currentTarget as HTMLElement).style.transform = 'scale(1.05)'
-            ;(e.currentTarget as HTMLElement).style.backgroundColor = C.accent
+            ; (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)'
+              ; (e.currentTarget as HTMLElement).style.backgroundColor = C.accent
           }}
           onMouseLeave={(e) => {
-            ;(e.currentTarget as HTMLElement).style.transform = 'scale(1)'
-            ;(e.currentTarget as HTMLElement).style.backgroundColor = C.bright
+            ; (e.currentTarget as HTMLElement).style.transform = 'scale(1)'
+              ; (e.currentTarget as HTMLElement).style.backgroundColor = C.bright
           }}
         >
           Iniciar Projeto
@@ -911,7 +911,7 @@ export default function App() {
               GitHub
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/guilherme-cmuller"
               target="_blank"
               rel="noreferrer"
               style={{

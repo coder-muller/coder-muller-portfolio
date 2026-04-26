@@ -114,7 +114,7 @@ export const projects: ProjectItem[] = [
     name: 'Veltro',
     description:
       'Plataforma de consolidação de carteiras de investimento para o mercado brasileiro — renda fixa e variável em um único painel. Agrega ativos de diferentes corretoras, calcula rentabilidade real descontando inflação e IR, e apresenta a distribuição do portfólio de forma clara. Atualmente em fase alfa.',
-    pills: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'Renda Fixa', 'B3'],
+    pills: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL'],
   },
   {
     href: 'https://kiaro.xyz',
@@ -122,7 +122,7 @@ export const projects: ProjectItem[] = [
     name: 'Kiaro',
     description:
       'App de gestão para empresas que cobram mensalidades de clientes — centraliza contratos, clientes, cobranças recorrentes e um módulo de controle financeiro simplificado. Elimina planilhas, automatiza o acompanhamento de inadimplência e dá visibilidade real sobre a receita da empresa.',
-    pills: ['Next.js', 'shadcn/ui', 'Stripe', 'Prisma', 'PostgreSQL', 'Better Auth'],
+    pills: ['Next.js', 'shadcn/ui', 'Prisma', 'Better Auth'],
   },
   {
     href: 'https://github.com/coder-muller',
