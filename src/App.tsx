@@ -394,7 +394,7 @@ function About() {
       }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <SectionTitle num="01" label="Visão Geral" />
+        <SectionTitle num="01" label="Sobre" />
 
         <div
           style={{ gap: 'clamp(48px, 10vw, 100px)', alignItems: 'center' }}
@@ -417,7 +417,7 @@ function About() {
                 marginBottom: '32px',
               }}
             >
-              Arquitetando soluções escaláveis que convertem complexidade em interfaces limpas e
+              Criando soluções que transformam complexidade em interfaces limpas e
               eficientes.
             </p>
             <p
@@ -429,9 +429,9 @@ function About() {
                 maxWidth: '600px',
               }}
             >
-              Focado no que realmente importa: performance, conversão e experiência de usuário.
-              Desenvolvo aplicações SaaS completas, sistemas de alta disponibilidade e integrações
-              financeiras ponta a ponta.
+              Focado no que realmente importa: performance, design e experiência de usuário.
+              Desenvolvo aplicações completas, sistemas de alta confiabilidade e integrações
+              eficientes.
             </p>
           </motion.div>
 
@@ -450,12 +450,12 @@ function About() {
                 label: 'ANOS DE EXP',
                 desc: 'Construindo produtos digitais.',
               },
-              { target: 12, suffix: '+', label: 'PROJETOS', desc: 'Entregues em produção.' },
+              { target: 10, suffix: '+', label: 'PROJETOS', desc: 'Entregues em produção.' },
               {
-                target: 1000,
+                target: 100,
                 suffix: '+',
-                label: 'USUÁRIOS FINAIS',
-                desc: 'Impactados diariamente.',
+                label: 'CLIENTES REAIS',
+                desc: 'Que confiam no meu trabalho',
               },
               {
                 target: 100,
@@ -524,7 +524,7 @@ function About() {
 const techStacks = [
   { num: '01', group: 'Frontend', items: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Motion'] },
   { num: '02', group: 'Backend', items: ['Node.js', 'Bun', 'Elysia', 'Express', 'tRPC'] },
-  { num: '03', group: 'Database', items: ['PostgreSQL', 'Prisma', 'Redis', 'Docker', 'AWS'] },
+  { num: '03', group: 'Database', items: ['PostgreSQL', 'Prisma', 'Redis', 'Docker', 'Neon'] },
   { num: '04', group: 'Ecosystem', items: ['Stripe', 'Better Auth', 'Resend', 'Vercel', 'Figma'] },
 ]
 
@@ -623,19 +623,6 @@ function Stack() {
                       }}
                     >
                       {item}
-                    </span>
-                    <span
-                      className="stack-item-arrow"
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '16px',
-                        color: C.accent,
-                        opacity: 0,
-                        transform: 'translateX(-10px)',
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      +
                     </span>
                   </div>
                 ))}
