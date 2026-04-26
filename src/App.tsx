@@ -362,10 +362,10 @@ function About() {
 
 // ─── Stack ─────────────────────────────────────────────────────────────────
 const techStacks = [
-  { group: 'Core Frontend', items: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Motion'] },
-  { group: 'Backend & APIs', items: ['Node.js', 'Bun', 'Elysia', 'Express', 'tRPC'] },
-  { group: 'Dados & Infra', items: ['PostgreSQL', 'Prisma', 'Redis', 'Docker', 'AWS'] },
-  { group: 'Ecossistema', items: ['Stripe', 'Better Auth', 'Resend', 'Vercel'] },
+  { num: '01', group: 'Frontend', items: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Motion'] },
+  { num: '02', group: 'Backend', items: ['Node.js', 'Bun', 'Elysia', 'Express', 'tRPC'] },
+  { num: '03', group: 'Database', items: ['PostgreSQL', 'Prisma', 'Redis', 'Docker', 'AWS'] },
+  { num: '04', group: 'Ecosystem', items: ['Stripe', 'Better Auth', 'Resend', 'Vercel', 'Figma'] },
 ]
 
 function Stack() {
@@ -375,9 +375,17 @@ function Stack() {
       style={{ padding: '120px clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <SectionTitle num="02" label="Arsenal Técnico" />
+        <SectionTitle num="02" label="Tech Stack" />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <div 
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            borderTop: `1px solid ${C.border}`,
+            borderLeft: `1px solid ${C.border}`,
+          }}
+          className="max-[1024px]:grid-cols-2 max-[640px]:grid-cols-1"
+        >
           {techStacks.map((stack, idx) => (
             <motion.div 
               key={stack.group}
@@ -386,43 +394,82 @@ function Stack() {
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               viewport={{ once: true, margin: "-50px" }}
               style={{
-                display: 'grid',
-                gridTemplateColumns: '300px 1fr',
-                gap: '24px',
-                alignItems: 'center',
-                paddingBottom: '32px',
-                borderBottom: `1px solid ${C.border}`
+                display: 'flex',
+                flexDirection: 'column',
+                borderRight: `1px solid ${C.border}`,
+                borderBottom: `1px solid ${C.border}`,
               }}
-              className="max-[768px]:grid-cols-1"
             >
-              <h3 style={{ 
-                fontFamily: "'JetBrains Mono', monospace", 
-                fontSize: '14px', 
-                color: C.dim,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                margin: 0
+              {/* Header */}
+              <div style={{
+                padding: '24px',
+                borderBottom: `1px solid ${C.border}`,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                backgroundColor: C.bg
               }}>
-                // {stack.group}
-              </h3>
+                <h3 style={{ 
+                  fontFamily: "'JetBrains Mono', monospace", 
+                  fontSize: '12px', 
+                  color: C.dim,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  margin: 0
+                }}>
+                  {stack.group}
+                </h3>
+                <span style={{ 
+                  fontFamily: "'JetBrains Mono', monospace", 
+                  fontSize: '10px', 
+                  color: C.accent,
+                }}>
+                  [{stack.num}]
+                </span>
+              </div>
               
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-                {stack.items.map(item => (
-                  <span 
+              {/* Items */}
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {stack.items.map((item, itemIdx) => (
+                  <div 
                     key={item}
+                    className="stack-item"
                     style={{
-                      fontFamily: "'Bricolage Grotesque', sans-serif",
-                      fontSize: '18px',
-                      fontWeight: 600,
-                      color: C.bright,
-                      padding: '12px 24px',
-                      backgroundColor: C.bg,
-                      border: `1px solid ${C.border}`,
-                      borderRadius: '100px',
+                      padding: '24px',
+                      borderBottom: itemIdx !== stack.items.length - 1 ? `1px solid ${C.border}` : 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: 'default',
+                      transition: 'background-color 0.3s ease',
                     }}
                   >
-                    {item}
-                  </span>
+                    <span 
+                      className="stack-item-text" 
+                      style={{ 
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
+                        fontSize: 'clamp(20px, 2vw, 28px)',
+                        fontWeight: 600,
+                        color: C.bright,
+                        transition: 'all 0.3s ease' 
+                      }}
+                    >
+                      {item}
+                    </span>
+                    <span 
+                      className="stack-item-arrow" 
+                      style={{ 
+                        fontFamily: "'JetBrains Mono', monospace", 
+                        fontSize: '16px', 
+                        color: C.accent,
+                        opacity: 0,
+                        transform: 'translateX(-10px)',
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      +
+                    </span>
+                  </div>
                 ))}
               </div>
             </motion.div>
@@ -434,6 +481,7 @@ function Stack() {
 }
 
 // ─── Projects ────────────────────────────────────────────────────────────────
+
 function Projects() {
   return (
     <section
@@ -441,109 +489,70 @@ function Projects() {
       style={{ padding: '120px clamp(24px, 5vw, 80px)', backgroundColor: C.bg }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <SectionTitle num="03" label="Trabalhos" />
+        <SectionTitle num="03" label="Projetos" />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           {projects.map((p, i) => (
             <motion.a
               key={p.name}
               href={p.href}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.1 }}
-              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
               style={{
                 textDecoration: 'none',
-                display: 'block',
+                display: 'grid',
+                gridTemplateColumns: '80px 1fr 1fr',
+                gap: '40px',
+                alignItems: 'start',
+                padding: '64px 0',
+                borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
+                borderBottom: `1px solid ${C.border}`,
                 position: 'relative',
-                
               }}
-              className="project-card"
+              className="project-row max-[1024px]:grid-cols-1 max-[1024px]:gap-6 max-[1024px]:py-8"
             >
-              {/* Image Placeholder or Visual Element */}
               <div style={{
-                width: '100%',
-                height: 'clamp(300px, 40vw, 600px)',
-                backgroundColor: C.surface,
-                marginBottom: '32px',
-                position: 'relative',
-                overflow: 'hidden',
-                border: `1px solid ${C.border}`
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '14px',
+                color: C.dim,
+                fontWeight: 700
               }}>
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: `linear-gradient(45deg, ${C.bg} 0%, transparent 100%)`,
-                  zIndex: 1,
-                  opacity: 0.8
-                }}/>
-                {/* Abstract geometric shapes for project placeholder */}
-                <div style={{
-                  position: 'absolute',
-                  top: '50%', left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: '60%', height: '60%',
-                  border: `2px dashed ${C.dim}`,
-                  borderRadius: p.name === 'Veltro' ? '50%' : '0',
-                  opacity: 0.3
-                }} />
-                
-                <h3 style={{
-                  position: 'absolute',
-                  bottom: '40px',
-                  left: '40px',
+                0{i + 1}
+              </div>
+
+              <div>
+                <h3 className="project-title" style={{
                   fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontSize: 'clamp(40px, 8vw, 120px)',
+                  fontSize: 'clamp(40px, 6vw, 80px)',
                   fontWeight: 800,
                   color: C.bright,
                   lineHeight: 0.9,
                   letterSpacing: '-0.02em',
-                  margin: 0,
-                  zIndex: 2,
-                  textTransform: 'uppercase'
+                  margin: '0 0 16px 0',
+                  textTransform: 'uppercase',
+                  transition: 'color 0.3s ease'
                 }}>
                   {p.name}
                 </h3>
+                <div style={{ 
+                  fontFamily: "'JetBrains Mono', monospace", 
+                  fontSize: '12px', 
+                  color: C.accent,
+                  textTransform: 'uppercase',
+                  fontWeight: 700
+                }}>
+                  {p.meta}
+                </div>
               </div>
 
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: '1fr 2fr', 
-                gap: '48px',
-                alignItems: 'start'
-              }} className="max-[768px]:grid-cols-1">
-                <div>
-                  <div style={{ 
-                    fontFamily: "'JetBrains Mono', monospace", 
-                    fontSize: '12px', 
-                    color: C.accent,
-                    marginBottom: '16px',
-                    textTransform: 'uppercase',
-                    fontWeight: 700
-                  }}>
-                    {p.meta}
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    {p.pills.map(pill => (
-                      <span key={pill} style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '10px',
-                        color: C.bright,
-                        border: `1px solid ${C.border}`,
-                        padding: '6px 12px',
-                        borderRadius: '4px'
-                      }}>
-                        {pill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <p style={{
                   fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontSize: 'clamp(18px, 2vw, 24px)',
+                  fontSize: '18px',
                   color: C.dim,
                   lineHeight: 1.5,
                   margin: 0,
@@ -551,6 +560,15 @@ function Projects() {
                 }}>
                   {p.description}
                 </p>
+                <div style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '11px',
+                  color: C.text,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>
+                  {p.pills.join(' · ')}
+                </div>
               </div>
             </motion.a>
           ))}
@@ -561,6 +579,7 @@ function Projects() {
 }
 
 // ─── Contact ─────────────────────────────────────────────────────────────────
+
 function Contact() {
   return (
     <section
@@ -708,14 +727,20 @@ export default function App() {
           transform: scaleX(1);
           transform-origin: bottom left;
         }
-        .project-card:hover h3 {
+        .project-row:hover .project-title {
           color: ${C.accent} !important;
         }
-        .project-card img, .project-card .img-placeholder {
-          transition: transform 0.5s ease;
+
+        .stack-item:hover {
+          background-color: ${C.bg};
         }
-        .project-card:hover .img-placeholder {
-          transform: scale(1.02);
+        .stack-item:hover .stack-item-text {
+          transform: translateX(8px);
+          color: ${C.accent} !important;
+        }
+        .stack-item:hover .stack-item-arrow {
+          opacity: 1 !important;
+          transform: translateX(0) !important;
         }
       `}</style>
     </div>
