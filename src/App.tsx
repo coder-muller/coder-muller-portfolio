@@ -858,8 +858,7 @@ function Contact() {
             lineHeight: 1.6,
           }}
         >
-          Disponível para novos projetos, colaborações e oportunidades de impactar o mundo real com
-          código escalável.
+          Aberto a projetos, colaborações e oportunidades que gerem valor real.
         </motion.p>
 
         <div
@@ -874,8 +873,8 @@ function Contact() {
           {[
             {
               label: 'Email',
-              value: 'hello@muller.com',
-              href: 'mailto:guilhermecoelhomuller@gmail.com',
+              value: 'guilhermemullerxx@gmail.com',
+              href: 'mailto:guilhermemullerxx@gmail.com',
             },
             { label: 'GitHub', value: 'coder-muller', href: 'https://github.com/coder-muller' },
             {
@@ -885,8 +884,8 @@ function Contact() {
             },
             {
               label: 'Instagram',
-              value: '@guilhermecmuller',
-              href: 'https://instagram.com/guilhermecmuller',
+              value: '@coder.muller',
+              href: 'https://instagram.com/coder.muller',
             },
           ].map((link, i) => (
             <motion.a
