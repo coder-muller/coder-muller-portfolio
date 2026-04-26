@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'motion/react'
-import { projects, stackItems } from './data/portfolio'
+import { motion, useScroll, useTransform } from 'motion/react'
+import { projects } from './data/portfolio'
 import { useCustomCursor } from './hooks/useCustomCursor'
 
 // ─── Palette ────────────────────────────────────────────────────────────────
 const C = {
-  bg: '#09090b',
-  surface: '#18181b',
-  border: '#27272a',
-  borderHover: '#52525b',
-  text: '#e4e4e7',
-  dim: '#71717a',
-  bright: '#ffffff',
+  bg: '#050505',
+  surface: '#121212',
+  border: '#2A2A2A',
+  accent: '#FF3B00', // Vivid Orange for striking accents
+  text: '#F5F5F5',
+  dim: '#8A8A8A',
+  bright: '#FFFFFF',
 }
 
 // ─── Font loader ─────────────────────────────────────────────────────────────
@@ -20,7 +20,7 @@ function useFonts() {
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href =
-      'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap'
+      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;700&display=swap'
     document.head.appendChild(link)
     return () => link.remove()
   }, [])
@@ -67,71 +67,56 @@ function Nav() {
         left: 0,
         right: 0,
         zIndex: 50,
-        backgroundColor: 'rgba(9,9,11,0.92)',
-        borderBottom: `1px solid ${C.border}`,
-        backdropFilter: 'blur(8px)',
+        mixBlendMode: 'difference',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 clamp(24px, 5vw, 80px)',
-        height: '52px',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        justifyContent: 'space-between',
+        padding: '24px clamp(24px, 5vw, 80px)',
+        pointerEvents: 'none',
       }}
     >
       <a
         href="#"
         style={{
           color: C.bright,
-          fontSize: '14px',
-          fontWeight: 700,
+          fontSize: '18px',
+          fontFamily: "'Bricolage Grotesque', sans-serif",
+          fontWeight: 800,
           textDecoration: 'none',
+          pointerEvents: 'auto',
+          textTransform: 'uppercase',
           letterSpacing: '-0.02em',
         }}
       >
-        GM
+        Müller<span style={{color: C.accent}}>.</span>
       </a>
 
-      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '32px' }}>
-        <div style={{ display: 'flex', gap: '28px' }} className="max-[640px]:hidden">
-          {[
-            { n: '01', label: 'sobre', href: '#about' },
-            { n: '02', label: 'stack', href: '#stack' },
-            { n: '03', label: 'projetos', href: '#projects' },
-            { n: '04', label: 'contato', href: '#contact' },
-          ].map(item => (
-            <a
-              key={item.href}
-              href={item.href}
-              style={{
-                color: C.dim,
-                fontSize: '12px',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'color 150ms',
-                fontFamily: "'IBM Plex Mono', monospace",
-              }}
-              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = C.text)}
-              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = C.dim)}
-            >
-              <span style={{ fontSize: '10px', opacity: 0.5 }}>{item.n}</span>
-              {item.label}
-            </a>
-          ))}
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span
+      <div style={{ pointerEvents: 'auto', display: 'flex', gap: '32px' }} className="max-[640px]:hidden">
+        {[
+          { label: 'SOBRE', href: '#about' },
+          { label: 'STACKS', href: '#stack' },
+          { label: 'PROJETOS', href: '#projects' },
+          { label: 'CONTATO', href: '#contact' },
+        ].map((item) => (
+          <a
+            key={item.href}
+            href={item.href}
             style={{
+              color: C.bright,
+              fontSize: '11px',
+              textDecoration: 'none',
+              fontFamily: "'JetBrains Mono', monospace",
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              position: 'relative',
+              overflow: 'hidden',
               display: 'inline-block',
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              backgroundColor: '#ffffff',
             }}
-          />
-          <span style={{ color: C.dim, fontSize: '11px', fontFamily: "'IBM Plex Mono', monospace" }}>disponível</span>
-        </div>
+            className="nav-link"
+          >
+            {item.label}
+          </a>
+        ))}
       </div>
     </nav>
   )
@@ -139,6 +124,10 @@ function Nav() {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
+  const { scrollY } = useScroll()
+  const y1 = useTransform(scrollY, [0, 1000], [0, 200])
+  const y2 = useTransform(scrollY, [0, 1000], [0, -100])
+
   return (
     <section
       style={{
@@ -147,112 +136,131 @@ function Hero() {
         flexDirection: 'column',
         justifyContent: 'center',
         padding: '80px clamp(24px, 5vw, 80px) 60px',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      {/* Decorative Background Elements */}
+      <div style={{
+        position: 'absolute',
+        top: '-10%', left: '-10%',
+        width: '50vw', height: '50vw',
+        background: `radial-gradient(circle, ${C.accent}20 0%, transparent 70%)`,
+        filter: 'blur(80px)',
+        zIndex: -1,
+      }} />
+
       <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
-          color: C.dim,
-          fontSize: '11px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          marginBottom: '28px',
-          letterSpacing: '0.06em',
+          color: C.accent,
+          fontSize: '12px',
+          fontFamily: "'JetBrains Mono', monospace",
+          marginBottom: '24px',
+          letterSpacing: '0.1em',
           textTransform: 'uppercase',
+          fontWeight: 700,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
         }}
       >
-        full-stack · saas · pelotas, brasil
+        <span style={{ width: '40px', height: '1px', backgroundColor: C.accent }}></span>
+        Engenheiro de Software
       </motion.p>
 
-      <div style={{ overflow: 'hidden', marginBottom: '4px' }}>
-        <motion.h1
-          initial={{ y: '100%' }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 800,
-            fontSize: 'clamp(64px, 13vw, 168px)',
-            color: C.bright,
-            lineHeight: 0.9,
-            letterSpacing: '-0.04em',
-            margin: 0,
-          }}
-        >
-          GUILHERME
-        </motion.h1>
-      </div>
-      <div style={{ overflow: 'hidden', marginBottom: '40px' }}>
-        <motion.h1
-          initial={{ y: '100%' }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
-          style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 800,
-            fontSize: 'clamp(64px, 13vw, 168px)',
-            color: C.dim,
-            lineHeight: 0.9,
-            letterSpacing: '-0.04em',
-            margin: 0,
-          }}
-        >
-          MÜLLER.
-        </motion.h1>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <motion.div style={{ y: y1 }}>
+          <motion.h1
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              fontFamily: "'Bricolage Grotesque', sans-serif",
+              fontWeight: 800,
+              fontSize: 'clamp(60px, 15vw, 200px)',
+              color: C.bright,
+              lineHeight: 0.85,
+              letterSpacing: '-0.03em',
+              margin: 0,
+              textTransform: 'uppercase',
+            }}
+          >
+            GUILHERME
+          </motion.h1>
+        </motion.div>
+        
+        <motion.div style={{ y: y2 }}>
+          <motion.h1
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            style={{
+              fontFamily: "'Bricolage Grotesque', sans-serif",
+              fontWeight: 800,
+              fontSize: 'clamp(60px, 15vw, 200px)',
+              color: 'transparent',
+              WebkitTextStroke: `2px ${C.border}`,
+              lineHeight: 0.85,
+              letterSpacing: '-0.03em',
+              margin: 0,
+              textTransform: 'uppercase',
+              marginLeft: '5vw',
+            }}
+          >
+            MÜLLER.
+          </motion.h1>
+        </motion.div>
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.4 }}
-        style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.6 }}
+        style={{
+          position: 'absolute',
+          bottom: '40px',
+          right: 'clamp(24px, 5vw, 80px)',
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: '10px',
+          color: C.dim,
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          writingMode: 'vertical-rl',
+          transform: 'rotate(180deg)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px'
+        }}
       >
-        <a
-          href="#projects"
-          style={{
-            color: C.bright,
-            fontSize: '13px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            textDecoration: 'none',
-            borderBottom: `1px solid ${C.border}`,
-            paddingBottom: '2px',
-            transition: 'border-color 150ms',
-          }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.borderColor = C.bright)}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.borderColor = C.border)}
-        >
-          ver projetos →
-        </a>
-        <a
-          href="#contact"
-          style={{
-            color: C.dim,
-            fontSize: '13px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            textDecoration: 'none',
-            transition: 'color 150ms',
-          }}
-          onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = C.text)}
-          onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = C.dim)}
-        >
-          entrar em contato →
-        </a>
+        <span>Scroll to explore</span>
+        <span style={{ width: '1px', height: '60px', backgroundColor: C.dim }}></span>
       </motion.div>
     </section>
   )
 }
 
-// ─── SectionHeader ───────────────────────────────────────────────────────────
-function SectionHeader({ num, label }: { num: string; label: string }) {
+// ─── SectionTitle ────────────────────────────────────────────────────────────
+function SectionTitle({ num, label }: { num: string; label: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '48px' }}>
-      <span style={{ color: C.dim, fontSize: '11px', fontFamily: "'IBM Plex Mono', monospace" }}>
-        {num}
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px', marginBottom: '80px' }}>
+      <span style={{ color: C.accent, fontSize: '14px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+        [{num}]
       </span>
-      <span style={{ color: C.text, fontSize: '12px', fontFamily: "'IBM Plex Mono', monospace", letterSpacing: '0.06em' }}>
+      <h2 style={{ 
+        fontFamily: "'Bricolage Grotesque', sans-serif", 
+        fontSize: 'clamp(32px, 5vw, 64px)', 
+        fontWeight: 800,
+        color: C.bright,
+        lineHeight: 1,
+        letterSpacing: '-0.02em',
+        textTransform: 'uppercase',
+        margin: 0
+      }}>
         {label}
-      </span>
+      </h2>
     </div>
   )
 }
@@ -262,74 +270,86 @@ function About() {
   return (
     <section
       id="about"
-      style={{ padding: '80px clamp(24px, 5vw, 80px)', borderTop: `1px solid ${C.border}` }}
+      style={{ padding: '120px clamp(24px, 5vw, 80px)', borderTop: `1px solid ${C.border}`, position: 'relative' }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <SectionHeader num="01" label="SOBRE" />
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        <SectionTitle num="01" label="Visão Geral" />
 
         <div
-          style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '80px', alignItems: 'start' }}
-          className="max-[768px]:grid-cols-1"
+          style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '100px', alignItems: 'center' }}
+          className="max-[1024px]:grid-cols-1 max-[1024px]:gap-12"
         >
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-100px" }}
           >
-            <h2
+            <p
               style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: 'clamp(22px, 3vw, 36px)',
-                fontWeight: 700,
+                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontSize: 'clamp(24px, 3vw, 40px)',
+                fontWeight: 600,
                 color: C.bright,
-                letterSpacing: '-0.03em',
                 lineHeight: 1.2,
-                marginBottom: '20px',
+                letterSpacing: '-0.02em',
+                marginBottom: '32px',
               }}
             >
-              Focado no que realmente entrega.
-            </h2>
+              Arquitetando soluções escaláveis que convertem complexidade em interfaces limpas e eficientes.
+            </p>
             <p
               style={{
                 color: C.dim,
-                fontSize: '15px',
-                lineHeight: 1.7,
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                maxWidth: '520px',
+                fontSize: '16px',
+                lineHeight: 1.6,
+                fontFamily: "'JetBrains Mono', monospace",
+                maxWidth: '600px',
               }}
             >
-              Desenvolvedor web full-stack construindo aplicações rápidas e sustentáveis do front ao deploy. Foco em SaaS, integrações de pagamento e plataformas voltadas ao cliente.
+              Focado no que realmente importa: performance, conversão e experiência de usuário. Desenvolvo aplicações SaaS completas, sistemas de alta disponibilidade e integrações financeiras ponta a ponta.
             </p>
           </motion.div>
 
-          <div style={{ display: 'flex', gap: '48px' }} className="max-[768px]:gap-8">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px', backgroundColor: C.border }}>
             {[
-              { target: 3, suffix: '+', label: 'anos' },
-              { target: 12, suffix: '+', label: 'projetos' },
+              { target: 3, suffix: '+', label: 'ANOS DE EXP', desc: 'Construindo produtos digitais.' },
+              { target: 12, suffix: '+', label: 'PROJETOS', desc: 'Entregues em produção.' },
+              { target: 1000, suffix: '+', label: 'USUÁRIOS FINAIS', desc: 'Impactados diariamente.' },
+              { target: 100, suffix: '%', label: 'COMPROMETIMENTO', desc: 'Com o sucesso do projeto.' },
             ].map((s, i) => (
               <motion.div
                 key={s.label}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
-                style={{ textAlign: 'center' }}
+                style={{ 
+                  backgroundColor: C.bg, 
+                  padding: '40px 32px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
               >
                 <div
                   style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
                     fontWeight: 800,
-                    fontSize: 'clamp(48px, 6vw, 72px)',
+                    fontSize: 'clamp(48px, 6vw, 80px)',
                     color: C.bright,
                     lineHeight: 1,
                     letterSpacing: '-0.04em',
+                    marginBottom: '16px'
                   }}
                 >
                   <CountUp target={s.target} suffix={s.suffix} />
                 </div>
-                <div style={{ color: C.dim, fontSize: '12px', fontFamily: "'IBM Plex Mono', monospace", marginTop: '8px' }}>
+                <div style={{ color: C.accent, fontSize: '12px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, marginBottom: '8px' }}>
                   {s.label}
+                </div>
+                <div style={{ color: C.dim, fontSize: '12px', fontFamily: "'JetBrains Mono', monospace" }}>
+                  {s.desc}
                 </div>
               </motion.div>
             ))}
@@ -341,52 +361,69 @@ function About() {
 }
 
 // ─── Stack ─────────────────────────────────────────────────────────────────
+const techStacks = [
+  { group: 'Core Frontend', items: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Motion'] },
+  { group: 'Backend & APIs', items: ['Node.js', 'Bun', 'Elysia', 'Express', 'tRPC'] },
+  { group: 'Dados & Infra', items: ['PostgreSQL', 'Prisma', 'Redis', 'Docker', 'AWS'] },
+  { group: 'Ecossistema', items: ['Stripe', 'Better Auth', 'Resend', 'Vercel'] },
+]
+
 function Stack() {
   return (
     <section
       id="stack"
-      style={{ padding: '80px clamp(24px, 5vw, 80px)', borderTop: `1px solid ${C.border}` }}
+      style={{ padding: '120px clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <SectionHeader num="02" label="STACK" />
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        <SectionTitle num="02" label="Arsenal Técnico" />
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-            gap: '1px',
-            backgroundColor: C.border,
-          }}
-        >
-          {stackItems.map((item, i) => (
-            <motion.div
-              key={item.name}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: i * 0.04 }}
-              viewport={{ once: true }}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          {techStacks.map((stack, idx) => (
+            <motion.div 
+              key={stack.group}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
               style={{
-                backgroundColor: C.bg,
-                padding: '16px 20px',
-                transition: 'background-color 150ms',
-                cursor: 'default',
+                display: 'grid',
+                gridTemplateColumns: '300px 1fr',
+                gap: '24px',
+                alignItems: 'center',
+                paddingBottom: '32px',
+                borderBottom: `1px solid ${C.border}`
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.backgroundColor = C.surface }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.backgroundColor = C.bg }}
+              className="max-[768px]:grid-cols-1"
             >
-              <div
-                style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: C.text,
-                  marginBottom: '6px',
-                }}
-              >
-                {item.name}
-              </div>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '10px', color: C.dim }}>
-                {item.tag}
+              <h3 style={{ 
+                fontFamily: "'JetBrains Mono', monospace", 
+                fontSize: '14px', 
+                color: C.dim,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                margin: 0
+              }}>
+                // {stack.group}
+              </h3>
+              
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                {stack.items.map(item => (
+                  <span 
+                    key={item}
+                    style={{
+                      fontFamily: "'Bricolage Grotesque', sans-serif",
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      color: C.bright,
+                      padding: '12px 24px',
+                      backgroundColor: C.bg,
+                      border: `1px solid ${C.border}`,
+                      borderRadius: '100px',
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
               </div>
             </motion.div>
           ))}
@@ -401,66 +438,120 @@ function Projects() {
   return (
     <section
       id="projects"
-      style={{ padding: '80px clamp(24px, 5vw, 80px)', borderTop: `1px solid ${C.border}` }}
+      style={{ padding: '120px clamp(24px, 5vw, 80px)', backgroundColor: C.bg }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <SectionHeader num="03" label="PROJETOS" />
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        <SectionTitle num="03" label="Trabalhos" />
 
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
           {projects.map((p, i) => (
             <motion.a
               key={p.name}
               href={p.href}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.1 }}
+              viewport={{ once: true, margin: "-100px" }}
               style={{
                 textDecoration: 'none',
-                display: 'grid',
-                gridTemplateColumns: '40px 1fr auto auto',
-                gap: '16px',
-                alignItems: 'center',
-                padding: '20px 0',
-                borderBottom: `1px solid ${C.border}`,
-                backgroundColor: 'transparent',
-                transition: 'background-color 150ms, padding-left 150ms',
+                display: 'block',
+                position: 'relative',
+                
               }}
-              onMouseEnter={e => {
-                ;(e.currentTarget as HTMLAnchorElement).style.backgroundColor = C.surface
-                ;(e.currentTarget as HTMLAnchorElement).style.paddingLeft = '12px'
-              }}
-              onMouseLeave={e => {
-                ;(e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'transparent'
-                ;(e.currentTarget as HTMLAnchorElement).style.paddingLeft = '0'
-              }}
-              className="max-[640px]:grid-cols-1"
+              className="project-card"
             >
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '12px', color: C.dim }}>
-                0{i + 1}
-              </span>
-              <span
-                style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: '18px',
-                  fontWeight: 700,
+              {/* Image Placeholder or Visual Element */}
+              <div style={{
+                width: '100%',
+                height: 'clamp(300px, 40vw, 600px)',
+                backgroundColor: C.surface,
+                marginBottom: '32px',
+                position: 'relative',
+                overflow: 'hidden',
+                border: `1px solid ${C.border}`
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: `linear-gradient(45deg, ${C.bg} 0%, transparent 100%)`,
+                  zIndex: 1,
+                  opacity: 0.8
+                }}/>
+                {/* Abstract geometric shapes for project placeholder */}
+                <div style={{
+                  position: 'absolute',
+                  top: '50%', left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '60%', height: '60%',
+                  border: `2px dashed ${C.dim}`,
+                  borderRadius: p.name === 'Veltro' ? '50%' : '0',
+                  opacity: 0.3
+                }} />
+                
+                <h3 style={{
+                  position: 'absolute',
+                  bottom: '40px',
+                  left: '40px',
+                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontSize: 'clamp(40px, 8vw, 120px)',
+                  fontWeight: 800,
                   color: C.bright,
+                  lineHeight: 0.9,
                   letterSpacing: '-0.02em',
-                }}
-              >
-                {p.name}
-              </span>
-              <span
-                style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: C.dim, whiteSpace: 'nowrap' }}
-                className="max-[640px]:hidden"
-              >
-                {p.pills.slice(0, 3).join(' · ')}
-              </span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: C.dim, whiteSpace: 'nowrap' }}>
-                {p.meta} →
-              </span>
+                  margin: 0,
+                  zIndex: 2,
+                  textTransform: 'uppercase'
+                }}>
+                  {p.name}
+                </h3>
+              </div>
+
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 2fr', 
+                gap: '48px',
+                alignItems: 'start'
+              }} className="max-[768px]:grid-cols-1">
+                <div>
+                  <div style={{ 
+                    fontFamily: "'JetBrains Mono', monospace", 
+                    fontSize: '12px', 
+                    color: C.accent,
+                    marginBottom: '16px',
+                    textTransform: 'uppercase',
+                    fontWeight: 700
+                  }}>
+                    {p.meta}
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {p.pills.map(pill => (
+                      <span key={pill} style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '10px',
+                        color: C.bright,
+                        border: `1px solid ${C.border}`,
+                        padding: '6px 12px',
+                        borderRadius: '4px'
+                      }}>
+                        {pill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <p style={{
+                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontSize: 'clamp(18px, 2vw, 24px)',
+                  color: C.dim,
+                  lineHeight: 1.5,
+                  margin: 0,
+                  fontWeight: 400
+                }}>
+                  {p.description}
+                </p>
+              </div>
             </motion.a>
           ))}
         </div>
@@ -474,103 +565,79 @@ function Contact() {
   return (
     <section
       id="contact"
-      style={{ padding: '80px clamp(24px, 5vw, 80px)', borderTop: `1px solid ${C.border}` }}
+      style={{ padding: '160px clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
     >
-      <div
-        style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 360px', gap: '80px', alignItems: 'start' }}
-        className="max-[768px]:grid-cols-1"
-      >
-        <div>
-          <SectionHeader num="04" label="CONTATO" />
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            style={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontWeight: 800,
-              fontSize: 'clamp(28px, 4vw, 48px)',
-              color: C.bright,
-              letterSpacing: '-0.03em',
-              lineHeight: 1.15,
-              marginBottom: '16px',
-            }}
-          >
-            Vamos construir algo juntos.
-          </motion.h2>
-          <p style={{ color: C.dim, fontSize: '15px', lineHeight: 1.7, fontFamily: "'Plus Jakarta Sans', sans-serif", maxWidth: '400px' }}>
-            Aberto a freelance, colaborações em SaaS e oportunidades full-time.
-          </p>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
+      <div style={{ maxWidth: '1400px', margin: '0 auto', textAlign: 'center' }}>
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
+          style={{
+            fontFamily: "'Bricolage Grotesque', sans-serif",
+            fontWeight: 800,
+            fontSize: 'clamp(48px, 10vw, 140px)',
+            color: C.bright,
+            lineHeight: 0.9,
+            letterSpacing: '-0.04em',
+            margin: '0 0 24px 0',
+            textTransform: 'uppercase'
+          }}
         >
-          {[
-            { label: 'email', value: 'guilhermecoelhomuller@gmail.com', href: 'mailto:guilhermecoelhomuller@gmail.com' },
-            { label: 'github', value: 'github.com/coder-muller', href: 'https://github.com/coder-muller' },
-            { label: 'onde', value: 'Pelotas, Brasil · Remoto', href: undefined },
-          ].map(row => (
-            <div
-              key={row.label}
-              style={{ display: 'flex', gap: '16px', padding: '16px 0', borderBottom: `1px solid ${C.border}`, alignItems: 'center' }}
-            >
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '11px', color: C.dim, minWidth: '52px' }}>
-                {row.label}
-              </span>
-              {row.href ? (
-                <a
-                  href={row.href}
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    color: C.text,
-                    textDecoration: 'none',
-                    transition: 'color 150ms',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                  onMouseEnter={e => ((e.target as HTMLElement).style.color = C.bright)}
-                  onMouseLeave={e => ((e.target as HTMLElement).style.color = C.text)}
-                >
-                  {row.value}
-                </a>
-              ) : (
-                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px', color: C.dim }}>
-                  {row.value}
-                </span>
-              )}
-            </div>
-          ))}
+          Vamos<br/><span style={{ color: C.accent }}>Conversar</span>
+        </motion.h2>
 
-          <a
-            href="mailto:guilhermecoelhomuller@gmail.com"
-            style={{
-              display: 'block',
-              marginTop: '24px',
-              textAlign: 'center',
-              backgroundColor: C.bright,
-              color: C.bg,
-              padding: '12px 24px',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: '13px',
-              fontWeight: 700,
-              textDecoration: 'none',
-              letterSpacing: '-0.01em',
-              transition: 'opacity 150ms',
-            }}
-            onMouseEnter={e => ((e.target as HTMLElement).style.opacity = '0.88')}
-            onMouseLeave={e => ((e.target as HTMLElement).style.opacity = '1')}
-          >
-            enviar mensagem
-          </a>
-        </motion.div>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          viewport={{ once: true }}
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '16px',
+            color: C.dim,
+            maxWidth: '600px',
+            margin: '0 auto 64px auto',
+            lineHeight: 1.6
+          }}
+        >
+          Disponível para novos projetos, colaborações e oportunidades de impactar o mundo real com código escalável.
+        </motion.p>
+
+        <motion.a
+          href="mailto:guilhermecoelhomuller@gmail.com"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          viewport={{ once: true }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '80px',
+            padding: '0 64px',
+            backgroundColor: C.bright,
+            color: C.bg,
+            fontFamily: "'Bricolage Grotesque', sans-serif",
+            fontSize: '20px',
+            fontWeight: 800,
+            textDecoration: 'none',
+            borderRadius: '100px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.02em',
+            transition: 'transform 0.2s, background-color 0.2s',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
+            (e.currentTarget as HTMLElement).style.backgroundColor = C.accent;
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
+            (e.currentTarget as HTMLElement).style.backgroundColor = C.bright;
+          }}
+        >
+          Iniciar Projeto
+        </motion.a>
       </div>
     </section>
   )
@@ -585,16 +652,18 @@ export default function App() {
     document.body.style.backgroundColor = C.bg
     document.body.style.color = C.text
     document.body.style.margin = '0'
+    document.body.style.overflowX = 'hidden'
     return () => {
       document.body.style.backgroundColor = ''
       document.body.style.color = ''
+      document.body.style.overflowX = ''
     }
   }, [])
 
   return (
-    <div style={{ backgroundColor: C.bg, minHeight: '100dvh', color: C.text }}>
+    <div style={{ backgroundColor: C.bg, minHeight: '100dvh', color: C.text, overflowX: 'hidden' }}>
       <Nav />
-      <main style={{ paddingTop: '52px' }}>
+      <main>
         <Hero />
         <About />
         <Stack />
@@ -602,22 +671,53 @@ export default function App() {
         <Contact />
         <footer
           style={{
-            padding: '24px clamp(24px, 5vw, 80px)',
+            padding: '40px clamp(24px, 5vw, 80px)',
+            backgroundColor: C.bg,
             borderTop: `1px solid ${C.border}`,
             display: 'flex',
             justifyContent: 'space-between',
+            alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '8px',
+            gap: '24px',
           }}
         >
-          <span style={{ color: C.dim, fontSize: '11px', fontFamily: "'IBM Plex Mono', monospace" }}>
-            © 2025 Guilherme Müller
+          <span style={{ color: C.dim, fontSize: '12px', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase' }}>
+            © {new Date().getFullYear()} Guilherme Müller
           </span>
-          <span style={{ color: C.dim, fontSize: '11px', fontFamily: "'IBM Plex Mono', monospace" }}>
-            desenvolvido à mão
-          </span>
+          <div style={{ display: 'flex', gap: '24px' }}>
+            <a href="https://github.com/coder-muller" target="_blank" rel="noreferrer" style={{ color: C.dim, fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', textDecoration: 'none', textTransform: 'uppercase' }}>GitHub</a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" style={{ color: C.dim, fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', textDecoration: 'none', textTransform: 'uppercase' }}>LinkedIn</a>
+          </div>
         </footer>
       </main>
+
+      <style>{`
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          transform: scaleX(0);
+          height: 1px;
+          bottom: 0;
+          left: 0;
+          background-color: ${C.accent};
+          transform-origin: bottom right;
+          transition: transform 0.25s ease-out;
+        }
+        .nav-link:hover::after {
+          transform: scaleX(1);
+          transform-origin: bottom left;
+        }
+        .project-card:hover h3 {
+          color: ${C.accent} !important;
+        }
+        .project-card img, .project-card .img-placeholder {
+          transition: transform 0.5s ease;
+        }
+        .project-card:hover .img-placeholder {
+          transform: scale(1.02);
+        }
+      `}</style>
     </div>
   )
 }
