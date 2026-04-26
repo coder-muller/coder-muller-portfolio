@@ -52,7 +52,8 @@ function CountUp({ target, suffix = '' }: { target: number; suffix?: string }) {
       }}
       viewport={{ once: true }}
     >
-      {count}{suffix}
+      {count}
+      {suffix}
     </motion.span>
   )
 }
@@ -98,7 +99,7 @@ function Nav() {
             letterSpacing: '-0.02em',
           }}
         >
-          Müller<span style={{color: C.accent}}>.</span>
+          Müller<span style={{ color: C.accent }}>.</span>
         </a>
 
         {/* Desktop links */}
@@ -127,7 +128,7 @@ function Nav() {
 
         {/* Hamburger - mobile only */}
         <button
-          onClick={() => setOpen(o => !o)}
+          onClick={() => setOpen((o) => !o)}
           aria-label={open ? 'Fechar menu' : 'Abrir menu'}
           className="flex sm:hidden"
           style={{
@@ -140,21 +141,36 @@ function Nav() {
             gap: '5px',
           }}
         >
-          <span style={{
-            width: '24px', height: '2px', backgroundColor: C.bright, display: 'block',
-            transition: 'transform 0.2s',
-            transform: open ? 'translateY(7px) rotate(45deg)' : 'none',
-          }} />
-          <span style={{
-            width: '24px', height: '2px', backgroundColor: C.bright, display: 'block',
-            transition: 'opacity 0.2s',
-            opacity: open ? 0 : 1,
-          }} />
-          <span style={{
-            width: '24px', height: '2px', backgroundColor: C.bright, display: 'block',
-            transition: 'transform 0.2s',
-            transform: open ? 'translateY(-7px) rotate(-45deg)' : 'none',
-          }} />
+          <span
+            style={{
+              width: '24px',
+              height: '2px',
+              backgroundColor: C.bright,
+              display: 'block',
+              transition: 'transform 0.2s',
+              transform: open ? 'translateY(7px) rotate(45deg)' : 'none',
+            }}
+          />
+          <span
+            style={{
+              width: '24px',
+              height: '2px',
+              backgroundColor: C.bright,
+              display: 'block',
+              transition: 'opacity 0.2s',
+              opacity: open ? 0 : 1,
+            }}
+          />
+          <span
+            style={{
+              width: '24px',
+              height: '2px',
+              backgroundColor: C.bright,
+              display: 'block',
+              transition: 'transform 0.2s',
+              transform: open ? 'translateY(-7px) rotate(-45deg)' : 'none',
+            }}
+          />
         </button>
       </nav>
 
@@ -220,19 +236,23 @@ function Hero() {
       }}
     >
       {/* Decorative Background Elements */}
-      <div style={{
-        position: 'absolute',
-        top: '-10%', left: '-10%',
-        width: '50vw', height: '50vw',
-        background: `radial-gradient(circle, ${C.accent}20 0%, transparent 70%)`,
-        filter: 'blur(80px)',
-        zIndex: -1,
-      }} />
+      <div
+        style={{
+          position: 'absolute',
+          top: '-10%',
+          left: '-10%',
+          width: '50vw',
+          height: '50vw',
+          background: `radial-gradient(circle, ${C.accent}20 0%, transparent 70%)`,
+          filter: 'blur(80px)',
+          zIndex: -1,
+        }}
+      />
 
       <motion.p
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
         style={{
           color: C.accent,
           fontSize: '12px',
@@ -243,7 +263,7 @@ function Hero() {
           fontWeight: 700,
           display: 'flex',
           alignItems: 'center',
-          gap: '12px'
+          gap: '12px',
         }}
       >
         <span style={{ width: '40px', height: '1px', backgroundColor: C.accent }}></span>
@@ -271,7 +291,7 @@ function Hero() {
             GUILHERME
           </motion.h1>
         </motion.div>
-        
+
         <motion.div style={{ y: y2 }}>
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
@@ -313,7 +333,7 @@ function Hero() {
           writingMode: 'vertical-rl',
           transform: 'rotate(180deg)',
           alignItems: 'center',
-          gap: '16px'
+          gap: '16px',
         }}
       >
         <span>Scroll to explore</span>
@@ -326,20 +346,36 @@ function Hero() {
 // ─── SectionTitle ────────────────────────────────────────────────────────────
 function SectionTitle({ num, label }: { num: string; label: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px', marginBottom: 'clamp(40px, 6vw, 80px)' }}>
-      <span style={{ color: C.accent, fontSize: '14px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: '24px',
+        marginBottom: 'clamp(40px, 6vw, 80px)',
+      }}
+    >
+      <span
+        style={{
+          color: C.accent,
+          fontSize: '14px',
+          fontFamily: "'JetBrains Mono', monospace",
+          fontWeight: 700,
+        }}
+      >
         [{num}]
       </span>
-      <h2 style={{ 
-        fontFamily: "'Bricolage Grotesque', sans-serif", 
-        fontSize: 'clamp(32px, 5vw, 64px)', 
-        fontWeight: 800,
-        color: C.bright,
-        lineHeight: 1,
-        letterSpacing: '-0.02em',
-        textTransform: 'uppercase',
-        margin: 0
-      }}>
+      <h2
+        style={{
+          fontFamily: "'Bricolage Grotesque', sans-serif",
+          fontSize: 'clamp(32px, 5vw, 64px)',
+          fontWeight: 800,
+          color: C.bright,
+          lineHeight: 1,
+          letterSpacing: '-0.02em',
+          textTransform: 'uppercase',
+          margin: 0,
+        }}
+      >
         {label}
       </h2>
     </div>
@@ -351,7 +387,11 @@ function About() {
   return (
     <section
       id="about"
-      style={{ padding: 'clamp(60px, 10vw, 120px) clamp(24px, 5vw, 80px)', borderTop: `1px solid ${C.border}`, position: 'relative' }}
+      style={{
+        padding: 'clamp(60px, 10vw, 120px) clamp(24px, 5vw, 80px)',
+        borderTop: `1px solid ${C.border}`,
+        position: 'relative',
+      }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <SectionTitle num="01" label="Visão Geral" />
@@ -363,8 +403,8 @@ function About() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            viewport={{ once: true, margin: '-100px' }}
           >
             <p
               style={{
@@ -377,7 +417,8 @@ function About() {
                 marginBottom: '32px',
               }}
             >
-              Arquitetando soluções escaláveis que convertem complexidade em interfaces limpas e eficientes.
+              Arquitetando soluções escaláveis que convertem complexidade em interfaces limpas e
+              eficientes.
             </p>
             <p
               style={{
@@ -388,16 +429,40 @@ function About() {
                 maxWidth: '600px',
               }}
             >
-              Focado no que realmente importa: performance, conversão e experiência de usuário. Desenvolvo aplicações SaaS completas, sistemas de alta disponibilidade e integrações financeiras ponta a ponta.
+              Focado no que realmente importa: performance, conversão e experiência de usuário.
+              Desenvolvo aplicações SaaS completas, sistemas de alta disponibilidade e integrações
+              financeiras ponta a ponta.
             </p>
           </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px', backgroundColor: C.border }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '2px',
+              backgroundColor: C.border,
+            }}
+          >
             {[
-              { target: 3, suffix: '+', label: 'ANOS DE EXP', desc: 'Construindo produtos digitais.' },
+              {
+                target: 3,
+                suffix: '+',
+                label: 'ANOS DE EXP',
+                desc: 'Construindo produtos digitais.',
+              },
               { target: 12, suffix: '+', label: 'PROJETOS', desc: 'Entregues em produção.' },
-              { target: 1000, suffix: '+', label: 'USUÁRIOS FINAIS', desc: 'Impactados diariamente.' },
-              { target: 100, suffix: '%', label: 'COMPROMETIMENTO', desc: 'Com o sucesso do projeto.' },
+              {
+                target: 1000,
+                suffix: '+',
+                label: 'USUÁRIOS FINAIS',
+                desc: 'Impactados diariamente.',
+              },
+              {
+                target: 100,
+                suffix: '%',
+                label: 'COMPROMETIMENTO',
+                desc: 'Com o sucesso do projeto.',
+              },
             ].map((s, i) => (
               <motion.div
                 key={s.label}
@@ -405,8 +470,8 @@ function About() {
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
-                style={{ 
-                  backgroundColor: C.bg, 
+                style={{
+                  backgroundColor: C.bg,
                   padding: 'clamp(16px, 3vw, 40px) clamp(12px, 2.5vw, 32px)',
                   display: 'flex',
                   flexDirection: 'column',
@@ -421,15 +486,29 @@ function About() {
                     color: C.bright,
                     lineHeight: 1,
                     letterSpacing: '-0.04em',
-                    marginBottom: '16px'
+                    marginBottom: '16px',
                   }}
                 >
                   <CountUp target={s.target} suffix={s.suffix} />
                 </div>
-                <div style={{ color: C.accent, fontSize: '12px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, marginBottom: '8px' }}>
+                <div
+                  style={{
+                    color: C.accent,
+                    fontSize: '12px',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                    marginBottom: '8px',
+                  }}
+                >
                   {s.label}
                 </div>
-                <div style={{ color: C.dim, fontSize: '12px', fontFamily: "'JetBrains Mono', monospace" }}>
+                <div
+                  style={{
+                    color: C.dim,
+                    fontSize: '12px',
+                    fontFamily: "'JetBrains Mono', monospace",
+                  }}
+                >
                   {s.desc}
                 </div>
               </motion.div>
@@ -453,12 +532,15 @@ function Stack() {
   return (
     <section
       id="stack"
-      style={{ padding: 'clamp(60px, 10vw, 120px) clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
+      style={{
+        padding: 'clamp(60px, 10vw, 120px) clamp(24px, 5vw, 80px)',
+        backgroundColor: C.surface,
+      }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <SectionTitle num="02" label="Tech Stack" />
 
-        <div 
+        <div
           style={{
             borderTop: `1px solid ${C.border}`,
             borderLeft: `1px solid ${C.border}`,
@@ -466,12 +548,12 @@ function Stack() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
         >
           {techStacks.map((stack, idx) => (
-            <motion.div 
+            <motion.div
               key={stack.group}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: '-50px' }}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -480,42 +562,49 @@ function Stack() {
               }}
             >
               {/* Header */}
-              <div style={{
-                padding: '24px',
-                borderBottom: `1px solid ${C.border}`,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                backgroundColor: C.bg
-              }}>
-                <h3 style={{ 
-                  fontFamily: "'JetBrains Mono', monospace", 
-                  fontSize: '12px', 
-                  color: C.dim,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  margin: 0
-                }}>
+              <div
+                style={{
+                  padding: '24px',
+                  borderBottom: `1px solid ${C.border}`,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: C.bg,
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '12px',
+                    color: C.dim,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    margin: 0,
+                  }}
+                >
                   {stack.group}
                 </h3>
-                <span style={{ 
-                  fontFamily: "'JetBrains Mono', monospace", 
-                  fontSize: '10px', 
-                  color: C.accent,
-                }}>
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '10px',
+                    color: C.accent,
+                  }}
+                >
                   [{stack.num}]
                 </span>
               </div>
-              
+
               {/* Items */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {stack.items.map((item, itemIdx) => (
-                   <div 
+                  <div
                     key={item}
                     className="stack-item"
                     style={{
                       padding: 'clamp(16px, 2vw, 24px)',
-                      borderBottom: itemIdx !== stack.items.length - 1 ? `1px solid ${C.border}` : 'none',
+                      borderBottom:
+                        itemIdx !== stack.items.length - 1 ? `1px solid ${C.border}` : 'none',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
@@ -523,23 +612,23 @@ function Stack() {
                       transition: 'background-color 0.3s ease',
                     }}
                   >
-                    <span 
-                      className="stack-item-text" 
-                      style={{ 
+                    <span
+                      className="stack-item-text"
+                      style={{
                         fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: 'clamp(20px, 2vw, 28px)',
                         fontWeight: 600,
                         color: C.bright,
-                        transition: 'all 0.3s ease' 
+                        transition: 'all 0.3s ease',
                       }}
                     >
                       {item}
                     </span>
-                    <span 
-                      className="stack-item-arrow" 
-                      style={{ 
-                        fontFamily: "'JetBrains Mono', monospace", 
-                        fontSize: '16px', 
+                    <span
+                      className="stack-item-arrow"
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '16px',
                         color: C.accent,
                         opacity: 0,
                         transform: 'translateX(-10px)',
@@ -579,8 +668,8 @@ function Projects() {
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.1 }}
-              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.1 }}
+              viewport={{ once: true, margin: '-50px' }}
               style={{
                 textDecoration: 'none',
                 gap: 'clamp(16px, 4vw, 40px)',
@@ -592,59 +681,71 @@ function Projects() {
               }}
               className="project-row grid grid-cols-1 lg:grid-cols-[80px_1fr_1fr]"
             >
-              <div className="hidden lg:block" style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: '14px',
-                color: C.dim,
-                fontWeight: 700
-              }}>
+              <div
+                className="hidden lg:block"
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '14px',
+                  color: C.dim,
+                  fontWeight: 700,
+                }}
+              >
                 0{i + 1}
               </div>
 
               <div>
-                <h3 className="project-title" style={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontSize: 'clamp(28px, 6vw, 80px)',
-                  fontWeight: 800,
-                  color: C.bright,
-                  lineHeight: 0.9,
-                  letterSpacing: '-0.02em',
-                  margin: '0 0 16px 0',
-                  textTransform: 'uppercase',
-                  transition: 'color 0.3s ease',
-                  wordBreak: 'break-word',
-                }}>
+                <h3
+                  className="project-title"
+                  style={{
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontSize: 'clamp(28px, 6vw, 80px)',
+                    fontWeight: 800,
+                    color: C.bright,
+                    lineHeight: 0.9,
+                    letterSpacing: '-0.02em',
+                    margin: '0 0 16px 0',
+                    textTransform: 'uppercase',
+                    transition: 'color 0.3s ease',
+                    wordBreak: 'break-word',
+                  }}
+                >
                   {p.name}
                 </h3>
-                <div style={{ 
-                  fontFamily: "'JetBrains Mono', monospace", 
-                  fontSize: '12px', 
-                  color: C.accent,
-                  textTransform: 'uppercase',
-                  fontWeight: 700
-                }}>
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '12px',
+                    color: C.accent,
+                    textTransform: 'uppercase',
+                    fontWeight: 700,
+                  }}
+                >
                   {p.meta}
                 </div>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                <p style={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
-                  fontSize: '18px',
-                  color: C.dim,
-                  lineHeight: 1.5,
-                  margin: 0,
-                  fontWeight: 400
-                }}>
+                <p
+                  style={{
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontSize: '18px',
+                    color: C.dim,
+                    lineHeight: 1.5,
+                    margin: 0,
+                    fontWeight: 400,
+                  }}
+                >
                   {p.description}
                 </p>
-                <div style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '11px',
-                  color: C.text,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '11px',
+                    color: C.text,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                  }}
+                >
                   {p.pills.join(' · ')}
                 </div>
               </div>
@@ -662,7 +763,10 @@ function Contact() {
   return (
     <section
       id="contact"
-      style={{ padding: 'clamp(80px, 12vw, 160px) clamp(24px, 5vw, 80px)', backgroundColor: C.surface }}
+      style={{
+        padding: 'clamp(80px, 12vw, 160px) clamp(24px, 5vw, 80px)',
+        backgroundColor: C.surface,
+      }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto', textAlign: 'center' }}>
         <motion.h2
@@ -682,7 +786,9 @@ function Contact() {
             wordBreak: 'break-word',
           }}
         >
-          Vamos<br/><span style={{ color: C.accent }}>Conversar</span>
+          Vamos
+          <br />
+          <span style={{ color: C.accent }}>Conversar</span>
         </motion.h2>
 
         <motion.p
@@ -696,10 +802,11 @@ function Contact() {
             color: C.dim,
             maxWidth: '600px',
             margin: '0 auto 64px auto',
-            lineHeight: 1.6
+            lineHeight: 1.6,
           }}
         >
-          Disponível para novos projetos, colaborações e oportunidades de impactar o mundo real com código escalável.
+          Disponível para novos projetos, colaborações e oportunidades de impactar o mundo real com
+          código escalável.
         </motion.p>
 
         <motion.a
@@ -724,13 +831,13 @@ function Contact() {
             letterSpacing: '0.02em',
             transition: 'transform 0.2s, background-color 0.2s',
           }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
-            (e.currentTarget as HTMLElement).style.backgroundColor = C.accent;
+          onMouseEnter={(e) => {
+            ;(e.currentTarget as HTMLElement).style.transform = 'scale(1.05)'
+            ;(e.currentTarget as HTMLElement).style.backgroundColor = C.accent
           }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-            (e.currentTarget as HTMLElement).style.backgroundColor = C.bright;
+          onMouseLeave={(e) => {
+            ;(e.currentTarget as HTMLElement).style.transform = 'scale(1)'
+            ;(e.currentTarget as HTMLElement).style.backgroundColor = C.bright
           }}
         >
           Iniciar Projeto
@@ -778,12 +885,45 @@ export default function App() {
             gap: '24px',
           }}
         >
-          <span style={{ color: C.dim, fontSize: '12px', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase' }}>
+          <span
+            style={{
+              color: C.dim,
+              fontSize: '12px',
+              fontFamily: "'JetBrains Mono', monospace",
+              textTransform: 'uppercase',
+            }}
+          >
             © {new Date().getFullYear()} Guilherme Müller
           </span>
           <div style={{ display: 'flex', gap: '24px' }}>
-            <a href="https://github.com/coder-muller" target="_blank" rel="noreferrer" style={{ color: C.dim, fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', textDecoration: 'none', textTransform: 'uppercase' }}>GitHub</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" style={{ color: C.dim, fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', textDecoration: 'none', textTransform: 'uppercase' }}>LinkedIn</a>
+            <a
+              href="https://github.com/coder-muller"
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                color: C.dim,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '12px',
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+              }}
+            >
+              GitHub
+            </a>
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                color: C.dim,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '12px',
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+              }}
+            >
+              LinkedIn
+            </a>
           </div>
         </footer>
       </main>
