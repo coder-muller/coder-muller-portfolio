@@ -417,8 +417,7 @@ function About() {
                 marginBottom: '32px',
               }}
             >
-              Criando soluções que transformam complexidade em interfaces limpas e
-              eficientes.
+              Criando soluções que transformam complexidade em interfaces limpas e eficientes.
             </p>
             <p
               style={{
@@ -452,7 +451,7 @@ function About() {
               },
               { target: 10, suffix: '+', label: 'PROJETOS', desc: 'Entregues em produção.' },
               {
-                target: 100,
+                target: 200,
                 suffix: '+',
                 label: 'CLIENTES REAIS',
                 desc: 'Que confiam no meu trabalho',
@@ -528,7 +527,146 @@ const techStacks = [
   { num: '04', group: 'Ecosystem', items: ['Stripe', 'Better Auth', 'Resend', 'Vercel', 'Figma'] },
 ]
 
+function StackColumn({
+  stack,
+  idx,
+  isOpen,
+  onToggle,
+  isMobile,
+}: {
+  stack: (typeof techStacks)[0]
+  idx: number
+  isOpen: boolean
+  onToggle: () => void
+  isMobile: boolean
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: idx * 0.1 }}
+      viewport={{ once: true, margin: '-50px' }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        borderRight: `1px solid ${C.border}`,
+        borderBottom: `1px solid ${C.border}`,
+      }}
+    >
+      {/* Header */}
+      <button
+        onClick={() => {
+          if (isMobile) onToggle()
+        }}
+        style={{
+          padding: '24px',
+          borderBottom: isOpen ? `1px solid ${C.border}` : 'none',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          backgroundColor: C.bg,
+          border: 'none',
+          borderBottomWidth: isOpen ? '1px' : '0',
+          borderBottomStyle: 'solid',
+          borderBottomColor: C.border,
+          cursor: isMobile ? 'pointer' : 'default',
+          width: '100%',
+          textAlign: 'left',
+          outline: 'none',
+        }}
+        className="stack-header"
+      >
+        <h3
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '12px',
+            color: C.dim,
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            margin: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+          }}
+        >
+          {stack.group}
+        </h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: '10px',
+              color: C.accent,
+            }}
+          >
+            [{stack.num}]
+          </span>
+          <span
+            className="sm:hidden"
+            style={{
+              color: C.dim,
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: '14px',
+              transition: 'transform 0.3s',
+              transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            }}
+          >
+            ↓
+          </span>
+        </div>
+      </button>
+
+      {/* Items */}
+      <motion.div
+        initial={false}
+        animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+        style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        {stack.items.map((item, itemIdx) => (
+          <div
+            key={item}
+            className="stack-item"
+            style={{
+              padding: 'clamp(16px, 2vw, 24px)',
+              borderBottom: itemIdx !== stack.items.length - 1 ? `1px solid ${C.border}` : 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'default',
+              transition: 'background-color 0.3s ease',
+            }}
+          >
+            <span
+              className="stack-item-text"
+              style={{
+                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontSize: 'clamp(20px, 2vw, 28px)',
+                fontWeight: 600,
+                color: C.bright,
+                transition: 'all 0.3s ease',
+              }}
+            >
+              {item}
+            </span>
+          </div>
+        ))}
+      </motion.div>
+    </motion.div>
+  )
+}
+
 function Stack() {
+  const [openIndex, setOpenIndex] = useState<number>(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 640)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <section
       id="stack"
@@ -548,86 +686,14 @@ function Stack() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
         >
           {techStacks.map((stack, idx) => (
-            <motion.div
+            <StackColumn
               key={stack.group}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              viewport={{ once: true, margin: '-50px' }}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                borderRight: `1px solid ${C.border}`,
-                borderBottom: `1px solid ${C.border}`,
-              }}
-            >
-              {/* Header */}
-              <div
-                style={{
-                  padding: '24px',
-                  borderBottom: `1px solid ${C.border}`,
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  backgroundColor: C.bg,
-                }}
-              >
-                <h3
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: '12px',
-                    color: C.dim,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    margin: 0,
-                  }}
-                >
-                  {stack.group}
-                </h3>
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: '10px',
-                    color: C.accent,
-                  }}
-                >
-                  [{stack.num}]
-                </span>
-              </div>
-
-              {/* Items */}
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {stack.items.map((item, itemIdx) => (
-                  <div
-                    key={item}
-                    className="stack-item"
-                    style={{
-                      padding: 'clamp(16px, 2vw, 24px)',
-                      borderBottom:
-                        itemIdx !== stack.items.length - 1 ? `1px solid ${C.border}` : 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      cursor: 'default',
-                      transition: 'background-color 0.3s ease',
-                    }}
-                  >
-                    <span
-                      className="stack-item-text"
-                      style={{
-                        fontFamily: "'Bricolage Grotesque', sans-serif",
-                        fontSize: 'clamp(20px, 2vw, 28px)',
-                        fontWeight: 600,
-                        color: C.bright,
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+              stack={stack}
+              idx={idx}
+              isOpen={isMobile ? openIndex === idx : true}
+              onToggle={() => setOpenIndex(openIndex === idx ? -1 : idx)}
+              isMobile={isMobile}
+            />
           ))}
         </div>
       </div>
@@ -751,7 +817,7 @@ function Contact() {
     <section
       id="contact"
       style={{
-        padding: 'clamp(80px, 12vw, 160px) clamp(24px, 5vw, 80px)',
+        padding: 'clamp(60px, 8vw, 100px) clamp(24px, 5vw, 80px)',
         backgroundColor: C.surface,
       }}
     >
@@ -764,7 +830,7 @@ function Contact() {
           style={{
             fontFamily: "'Bricolage Grotesque', sans-serif",
             fontWeight: 800,
-            fontSize: 'clamp(40px, 10vw, 140px)',
+            fontSize: 'clamp(32px, 8vw, 80px)',
             color: C.bright,
             lineHeight: 0.9,
             letterSpacing: '-0.04em',
@@ -785,10 +851,10 @@ function Contact() {
           viewport={{ once: true }}
           style={{
             fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '16px',
+            fontSize: '14px',
             color: C.dim,
-            maxWidth: '600px',
-            margin: '0 auto 64px auto',
+            maxWidth: '500px',
+            margin: '0 auto 40px auto',
             lineHeight: 1.6,
           }}
         >
@@ -796,39 +862,84 @@ function Contact() {
           código escalável.
         </motion.p>
 
-        <motion.a
-          href="mailto:guilhermecoelhomuller@gmail.com"
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          viewport={{ once: true }}
+        <div
           style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 'clamp(18px, 3vw, 24px) clamp(32px, 5vw, 64px)',
-            backgroundColor: C.bright,
-            color: C.bg,
-            fontFamily: "'Bricolage Grotesque', sans-serif",
-            fontSize: 'clamp(16px, 2.5vw, 20px)',
-            fontWeight: 800,
-            textDecoration: 'none',
-            borderRadius: '100px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.02em',
-            transition: 'transform 0.2s, background-color 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            ; (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)'
-              ; (e.currentTarget as HTMLElement).style.backgroundColor = C.accent
-          }}
-          onMouseLeave={(e) => {
-            ; (e.currentTarget as HTMLElement).style.transform = 'scale(1)'
-              ; (e.currentTarget as HTMLElement).style.backgroundColor = C.bright
+            display: 'flex',
+            flexDirection: 'column',
+            maxWidth: '600px',
+            margin: '0 auto',
+            borderTop: `1px solid ${C.border}`,
           }}
         >
-          Iniciar Projeto
-        </motion.a>
+          {[
+            {
+              label: 'Email',
+              value: 'hello@muller.com',
+              href: 'mailto:guilhermecoelhomuller@gmail.com',
+            },
+            { label: 'GitHub', value: 'coder-muller', href: 'https://github.com/coder-muller' },
+            {
+              label: 'LinkedIn',
+              value: 'guilherme-cmuller',
+              href: 'https://www.linkedin.com/in/guilherme-cmuller',
+            },
+            {
+              label: 'Instagram',
+              value: '@guilhermecmuller',
+              href: 'https://instagram.com/guilhermecmuller',
+            },
+          ].map((link, i) => (
+            <motion.a
+              key={link.label}
+              href={link.href}
+              target={link.label === 'Email' ? '_self' : '_blank'}
+              rel={link.label === 'Email' ? '' : 'noopener noreferrer'}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+              viewport={{ once: true }}
+              className="contact-link-row"
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '20px 0',
+                borderBottom: `1px solid ${C.border}`,
+                textDecoration: 'none',
+                position: 'relative',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '12px',
+                  color: C.dim,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  fontWeight: 700,
+                  transition: 'color 0.3s',
+                }}
+                className="contact-label"
+              >
+                {link.label}
+              </span>
+
+              <span
+                style={{
+                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontSize: 'clamp(16px, 2.5vw, 24px)',
+                  fontWeight: 600,
+                  color: C.bright,
+                  letterSpacing: '-0.01em',
+                  transition: 'all 0.3s',
+                }}
+                className="contact-value"
+              >
+                {link.value}
+              </span>
+            </motion.a>
+          ))}
+        </div>
       </div>
     </section>
   )
@@ -946,6 +1057,14 @@ export default function App() {
         .stack-item:hover .stack-item-arrow {
           opacity: 1 !important;
           transform: translateX(0) !important;
+        }
+
+        .contact-link-row:hover .contact-label {
+          color: ${C.accent} !important;
+        }
+        .contact-link-row:hover .contact-value {
+          color: ${C.accent} !important;
+          transform: translateX(-8px);
         }
       `}</style>
     </div>
