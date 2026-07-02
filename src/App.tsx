@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'motion/react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { projects } from './data/portfolio'
 import { useCustomCursor } from './hooks/useCustomCursor'
 
@@ -8,22 +8,33 @@ const C = {
   bg: '#050505',
   surface: '#121212',
   border: '#2A2A2A',
-  accent: '#FF3B00', // Vivid Orange for striking accents
+  accent: '#FF3B00',
   text: '#F5F5F5',
   dim: '#8A8A8A',
   bright: '#FFFFFF',
 }
 
-// ─── Font loader ─────────────────────────────────────────────────────────────
-function useFonts() {
-  useEffect(() => {
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href =
-      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;700&display=swap'
-    document.head.appendChild(link)
-    return () => link.remove()
-  }, [])
+const DISPLAY = "'Bricolage Grotesque', sans-serif"
+const MONO = "'JetBrains Mono', monospace"
+
+// ─── Letters: per-letter rise reveal ─────────────────────────────────────────
+function Letters({ text, delay = 0 }: { text: string; delay?: number }) {
+  const reduce = useReducedMotion()
+  return (
+    <span style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'bottom' }}>
+      {text.split('').map((ch, i) => (
+        <motion.span
+          key={i}
+          initial={reduce ? false : { y: '110%', rotate: 4 }}
+          animate={{ y: 0, rotate: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: delay + i * 0.04 }}
+          style={{ display: 'inline-block', willChange: 'transform' }}
+        >
+          {ch}
+        </motion.span>
+      ))}
+    </span>
+  )
 }
 
 // ─── CountUp ─────────────────────────────────────────────────────────────────
@@ -91,7 +102,7 @@ function Nav() {
           style={{
             color: C.bright,
             fontSize: '18px',
-            fontFamily: "'Bricolage Grotesque', sans-serif",
+            fontFamily: DISPLAY,
             fontWeight: 800,
             textDecoration: 'none',
             pointerEvents: 'auto',
@@ -102,7 +113,6 @@ function Nav() {
           Müller<span style={{ color: C.accent }}>.</span>
         </a>
 
-        {/* Desktop links */}
         <div style={{ pointerEvents: 'auto', gap: '32px' }} className="hidden sm:flex">
           {links.map((item) => (
             <a
@@ -112,7 +122,7 @@ function Nav() {
                 color: C.bright,
                 fontSize: '11px',
                 textDecoration: 'none',
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: MONO,
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 position: 'relative',
@@ -126,7 +136,6 @@ function Nav() {
           ))}
         </div>
 
-        {/* Hamburger - mobile only */}
         <button
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? 'Fechar menu' : 'Abrir menu'}
@@ -141,40 +150,29 @@ function Nav() {
             gap: '5px',
           }}
         >
-          <span
-            style={{
-              width: '24px',
-              height: '2px',
-              backgroundColor: C.bright,
-              display: 'block',
-              transition: 'transform 0.2s',
-              transform: open ? 'translateY(7px) rotate(45deg)' : 'none',
-            }}
-          />
-          <span
-            style={{
-              width: '24px',
-              height: '2px',
-              backgroundColor: C.bright,
-              display: 'block',
-              transition: 'opacity 0.2s',
-              opacity: open ? 0 : 1,
-            }}
-          />
-          <span
-            style={{
-              width: '24px',
-              height: '2px',
-              backgroundColor: C.bright,
-              display: 'block',
-              transition: 'transform 0.2s',
-              transform: open ? 'translateY(-7px) rotate(-45deg)' : 'none',
-            }}
-          />
+          {[0, 1, 2].map((n) => (
+            <span
+              key={n}
+              style={{
+                width: '24px',
+                height: '2px',
+                backgroundColor: C.bright,
+                display: 'block',
+                transition: 'transform 0.2s, opacity 0.2s',
+                transform: open
+                  ? n === 0
+                    ? 'translateY(7px) rotate(45deg)'
+                    : n === 2
+                      ? 'translateY(-7px) rotate(-45deg)'
+                      : 'none'
+                  : 'none',
+                opacity: open && n === 1 ? 0 : 1,
+              }}
+            />
+          ))}
         </button>
       </nav>
 
-      {/* Mobile menu overlay */}
       {open && (
         <div
           style={{
@@ -201,7 +199,7 @@ function Nav() {
                 color: C.bright,
                 fontSize: 'clamp(36px, 10vw, 56px)',
                 textDecoration: 'none',
-                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontFamily: DISPLAY,
                 fontWeight: 800,
                 letterSpacing: '-0.02em',
                 textTransform: 'uppercase',
@@ -219,9 +217,10 @@ function Nav() {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
+  const reduce = useReducedMotion()
   const { scrollY } = useScroll()
-  const y1 = useTransform(scrollY, [0, 1000], [0, 200])
-  const y2 = useTransform(scrollY, [0, 1000], [0, -100])
+  const y1 = useTransform(scrollY, [0, 1000], [0, reduce ? 0 : 180])
+  const y2 = useTransform(scrollY, [0, 1000], [0, reduce ? 0 : -90])
 
   return (
     <section
@@ -235,7 +234,6 @@ function Hero() {
         overflow: 'hidden',
       }}
     >
-      {/* Decorative Background Elements */}
       <div
         style={{
           position: 'absolute',
@@ -250,13 +248,13 @@ function Hero() {
       />
 
       <motion.p
-        initial={{ opacity: 0, x: -20 }}
+        initial={reduce ? false : { opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         style={{
           color: C.accent,
           fontSize: '12px',
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: MONO,
           marginBottom: '24px',
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
@@ -266,66 +264,81 @@ function Hero() {
           gap: '12px',
         }}
       >
-        <span style={{ width: '40px', height: '1px', backgroundColor: C.accent }}></span>
+        <motion.span
+          initial={reduce ? false : { scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            width: '40px',
+            height: '1px',
+            backgroundColor: C.accent,
+            transformOrigin: 'left',
+          }}
+        />
         Engenheiro de Software
       </motion.p>
 
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div style={{ y: y1 }}>
-          <motion.h1
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          <h1
             style={{
-              fontFamily: "'Bricolage Grotesque', sans-serif",
+              fontFamily: DISPLAY,
               fontWeight: 800,
-              fontSize: 'clamp(32px, 15vw, 200px)',
+              fontSize: 'clamp(48px, 15vw, 200px)',
               color: C.bright,
               lineHeight: 0.85,
               letterSpacing: '-0.03em',
               margin: 0,
               textTransform: 'uppercase',
-              wordBreak: 'break-word',
             }}
           >
-            GUILHERME
-          </motion.h1>
+            <Letters text="GUILHERME" delay={0.15} />
+          </h1>
         </motion.div>
 
         <motion.div style={{ y: y2 }}>
-          <motion.h1
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          <h1
+            className="ml-0 sm:ml-[5vw]"
             style={{
-              fontFamily: "'Bricolage Grotesque', sans-serif",
+              fontFamily: DISPLAY,
               fontWeight: 800,
-              fontSize: 'clamp(32px, 15vw, 200px)',
-              color: 'rgba(255, 255, 255, 0.05)',
-              WebkitTextStroke: `1.5px rgba(255, 255, 255, 0.25)`,
+              fontSize: 'clamp(48px, 15vw, 200px)',
               lineHeight: 0.85,
               letterSpacing: '-0.03em',
               margin: 0,
               textTransform: 'uppercase',
-              wordBreak: 'break-word',
+              display: 'flex',
+              alignItems: 'baseline',
+              flexWrap: 'wrap',
             }}
-            className="ml-0 sm:ml-[5vw]"
           >
-            MÜLLER.
-          </motion.h1>
+            <motion.span
+              initial={reduce ? false : { clipPath: 'inset(0 100% 0 0)' }}
+              animate={{ clipPath: 'inset(0 0% 0 0)' }}
+              transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                backgroundColor: C.accent,
+                color: C.bg,
+                padding: '0 0.08em',
+                display: 'inline-block',
+              }}
+            >
+              MÜLLER.
+            </motion.span>
+          </h1>
         </motion.div>
       </div>
 
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.6 }}
+        transition={{ duration: 1, delay: 1 }}
         className="hidden sm:flex"
         style={{
           position: 'absolute',
           bottom: '40px',
           right: 'clamp(24px, 5vw, 80px)',
-          fontFamily: "'JetBrains Mono', monospace",
+          fontFamily: MONO,
           fontSize: '10px',
           color: C.dim,
           letterSpacing: '0.2em',
@@ -337,47 +350,104 @@ function Hero() {
         }}
       >
         <span>Scroll to explore</span>
-        <span style={{ width: '1px', height: '60px', backgroundColor: C.dim }}></span>
+        <span style={{ width: '1px', height: '60px', backgroundColor: C.dim }} />
       </motion.div>
     </section>
+  )
+}
+
+// ─── Marquee ─────────────────────────────────────────────────────────────────
+function Marquee() {
+  const words = ['Fullstack', 'Performance', 'Design', 'TypeScript', 'Produto']
+  const chunk = (
+    <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+      {words.map((w, i) => (
+        <span
+          key={i}
+          style={{
+            fontFamily: DISPLAY,
+            fontWeight: 800,
+            fontSize: 'clamp(40px, 7vw, 96px)',
+            textTransform: 'uppercase',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.2,
+            padding: '0 28px',
+            whiteSpace: 'nowrap',
+            color: i % 2 === 0 ? 'transparent' : C.bright,
+            WebkitTextStroke: i % 2 === 0 ? `1px ${C.dim}` : undefined,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '56px',
+          }}
+        >
+          {w}
+          <span style={{ color: C.accent, fontSize: '0.4em', WebkitTextStroke: '0' }}>◆</span>
+        </span>
+      ))}
+    </div>
+  )
+
+  return (
+    <div
+      aria-hidden
+      style={{
+        overflow: 'hidden',
+        borderTop: `1px solid ${C.border}`,
+        borderBottom: `1px solid ${C.border}`,
+        padding: '20px 0',
+      }}
+    >
+      <div className="marquee-track">
+        {chunk}
+        {chunk}
+      </div>
+    </div>
   )
 }
 
 // ─── SectionTitle ────────────────────────────────────────────────────────────
 function SectionTitle({ num, label }: { num: string; label: string }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '24px',
-        marginBottom: 'clamp(40px, 6vw, 80px)',
-      }}
-    >
-      <span
+    <div style={{ marginBottom: 'clamp(40px, 6vw, 80px)' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
+        <span
+          style={{
+            color: C.accent,
+            fontSize: '14px',
+            fontFamily: MONO,
+            fontWeight: 700,
+          }}
+        >
+          [{num}]
+        </span>
+        <h2
+          style={{
+            fontFamily: DISPLAY,
+            fontSize: 'clamp(32px, 5vw, 64px)',
+            fontWeight: 800,
+            color: C.bright,
+            lineHeight: 1,
+            letterSpacing: '-0.02em',
+            textTransform: 'uppercase',
+            margin: 0,
+          }}
+        >
+          {label}
+        </h2>
+      </div>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: true, margin: '-80px' }}
         style={{
-          color: C.accent,
-          fontSize: '14px',
-          fontFamily: "'JetBrains Mono', monospace",
-          fontWeight: 700,
+          height: '2px',
+          backgroundColor: C.accent,
+          transformOrigin: 'left',
+          marginTop: '24px',
+          maxWidth: '120px',
         }}
-      >
-        [{num}]
-      </span>
-      <h2
-        style={{
-          fontFamily: "'Bricolage Grotesque', sans-serif",
-          fontSize: 'clamp(32px, 5vw, 64px)',
-          fontWeight: 800,
-          color: C.bright,
-          lineHeight: 1,
-          letterSpacing: '-0.02em',
-          textTransform: 'uppercase',
-          margin: 0,
-        }}
-      >
-        {label}
-      </h2>
+      />
     </div>
   )
 }
@@ -389,7 +459,6 @@ function About() {
       id="about"
       style={{
         padding: 'clamp(60px, 10vw, 120px) clamp(24px, 5vw, 80px)',
-        borderTop: `1px solid ${C.border}`,
         position: 'relative',
       }}
     >
@@ -408,7 +477,7 @@ function About() {
           >
             <p
               style={{
-                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontFamily: DISPLAY,
                 fontSize: 'clamp(24px, 3vw, 40px)',
                 fontWeight: 600,
                 color: C.bright,
@@ -417,14 +486,16 @@ function About() {
                 marginBottom: '32px',
               }}
             >
-              Criando soluções que transformam complexidade em interfaces limpas e eficientes.
+              Criando soluções que transformam{' '}
+              <span style={{ color: C.accent }}>complexidade</span> em interfaces limpas e
+              eficientes.
             </p>
             <p
               style={{
                 color: C.dim,
                 fontSize: '16px',
                 lineHeight: 1.6,
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: MONO,
                 maxWidth: '600px',
               }}
             >
@@ -479,7 +550,7 @@ function About() {
               >
                 <div
                   style={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontFamily: DISPLAY,
                     fontWeight: 800,
                     fontSize: 'clamp(32px, 6vw, 80px)',
                     color: C.bright,
@@ -494,22 +565,14 @@ function About() {
                   style={{
                     color: C.accent,
                     fontSize: '12px',
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: MONO,
                     fontWeight: 700,
                     marginBottom: '8px',
                   }}
                 >
                   {s.label}
                 </div>
-                <div
-                  style={{
-                    color: C.dim,
-                    fontSize: '12px',
-                    fontFamily: "'JetBrains Mono', monospace",
-                  }}
-                >
-                  {s.desc}
-                </div>
+                <div style={{ color: C.dim, fontSize: '12px', fontFamily: MONO }}>{s.desc}</div>
               </motion.div>
             ))}
           </div>
@@ -553,59 +616,44 @@ function StackColumn({
         borderBottom: `1px solid ${C.border}`,
       }}
     >
-      {/* Header */}
       <button
         onClick={() => {
           if (isMobile) onToggle()
         }}
         style={{
           padding: '24px',
-          borderBottom: isOpen ? `1px solid ${C.border}` : 'none',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           backgroundColor: C.bg,
           border: 'none',
-          borderBottomWidth: isOpen ? '1px' : '0',
-          borderBottomStyle: 'solid',
-          borderBottomColor: C.border,
+          borderBottom: isOpen ? `1px solid ${C.border}` : 'none',
           cursor: isMobile ? 'pointer' : 'default',
           width: '100%',
           textAlign: 'left',
-          outline: 'none',
         }}
-        className="stack-header"
       >
         <h3
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: MONO,
             fontSize: '12px',
             color: C.dim,
             textTransform: 'uppercase',
             letterSpacing: '0.05em',
             margin: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
           }}
         >
           {stack.group}
         </h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <span
-            style={{
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '10px',
-              color: C.accent,
-            }}
-          >
+          <span style={{ fontFamily: MONO, fontSize: '10px', color: C.accent }}>
             [{stack.num}]
           </span>
           <span
             className="sm:hidden"
             style={{
               color: C.dim,
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: MONO,
               fontSize: '14px',
               transition: 'transform 0.3s',
               transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -616,7 +664,6 @@ function StackColumn({
         </div>
       </button>
 
-      {/* Items */}
       <motion.div
         initial={false}
         animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
@@ -633,14 +680,13 @@ function StackColumn({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              cursor: 'default',
               transition: 'background-color 0.3s ease',
             }}
           >
             <span
               className="stack-item-text"
               style={{
-                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontFamily: DISPLAY,
                 fontSize: 'clamp(20px, 2vw, 28px)',
                 fontWeight: 600,
                 color: C.bright,
@@ -679,10 +725,7 @@ function Stack() {
         <SectionTitle num="02" label="Tech Stack" />
 
         <div
-          style={{
-            borderTop: `1px solid ${C.border}`,
-            borderLeft: `1px solid ${C.border}`,
-          }}
+          style={{ borderTop: `1px solid ${C.border}`, borderLeft: `1px solid ${C.border}` }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
         >
           {techStacks.map((stack, idx) => (
@@ -702,7 +745,6 @@ function Stack() {
 }
 
 // ─── Projects ────────────────────────────────────────────────────────────────
-
 function Projects() {
   return (
     <section
@@ -727,21 +769,16 @@ function Projects() {
                 textDecoration: 'none',
                 gap: 'clamp(16px, 4vw, 40px)',
                 alignItems: 'start',
-                padding: 'clamp(32px, 6vw, 64px) 0',
+                padding: 'clamp(32px, 6vw, 64px) clamp(8px, 1.5vw, 24px)',
                 borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
                 borderBottom: `1px solid ${C.border}`,
                 position: 'relative',
               }}
-              className="project-row grid grid-cols-1 lg:grid-cols-[80px_1fr_1fr]"
+              className="project-row grid grid-cols-1 lg:grid-cols-[80px_1fr_1fr_60px]"
             >
               <div
                 className="hidden lg:block"
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '14px',
-                  color: C.dim,
-                  fontWeight: 700,
-                }}
+                style={{ fontFamily: MONO, fontSize: '14px', color: C.dim, fontWeight: 700 }}
               >
                 0{i + 1}
               </div>
@@ -750,7 +787,7 @@ function Projects() {
                 <h3
                   className="project-title"
                   style={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontFamily: DISPLAY,
                     fontSize: 'clamp(28px, 6vw, 80px)',
                     fontWeight: 800,
                     color: C.bright,
@@ -758,7 +795,7 @@ function Projects() {
                     letterSpacing: '-0.02em',
                     margin: '0 0 16px 0',
                     textTransform: 'uppercase',
-                    transition: 'color 0.3s ease',
+                    transition: 'color 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                     wordBreak: 'break-word',
                   }}
                 >
@@ -766,7 +803,7 @@ function Projects() {
                 </h3>
                 <div
                   style={{
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: MONO,
                     fontSize: '12px',
                     color: C.accent,
                     textTransform: 'uppercase',
@@ -780,7 +817,7 @@ function Projects() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <p
                   style={{
-                    fontFamily: "'Bricolage Grotesque', sans-serif",
+                    fontFamily: DISPLAY,
                     fontSize: '18px',
                     color: C.dim,
                     lineHeight: 1.5,
@@ -792,7 +829,7 @@ function Projects() {
                 </p>
                 <div
                   style={{
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: MONO,
                     fontSize: '11px',
                     color: C.text,
                     textTransform: 'uppercase',
@@ -801,6 +838,23 @@ function Projects() {
                 >
                   {p.pills.join(' · ')}
                 </div>
+              </div>
+
+              <div
+                className="project-arrow hidden lg:block"
+                aria-hidden
+                style={{
+                  fontFamily: DISPLAY,
+                  fontSize: '40px',
+                  fontWeight: 800,
+                  color: C.accent,
+                  opacity: 0,
+                  transform: 'translate(-12px, 12px)',
+                  transition: 'opacity 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                  justifySelf: 'end',
+                }}
+              >
+                ↗
               </div>
             </motion.a>
           ))}
@@ -811,7 +865,6 @@ function Projects() {
 }
 
 // ─── Contact ─────────────────────────────────────────────────────────────────
-
 function Contact() {
   return (
     <section
@@ -822,27 +875,54 @@ function Contact() {
       }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto', textAlign: 'center' }}>
-        <motion.h2
+        <motion.a
+          href="mailto:guilhermemullerxx@gmail.com"
+          className="mega-cta"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
           viewport={{ once: true }}
           style={{
-            fontFamily: "'Bricolage Grotesque', sans-serif",
-            fontWeight: 800,
-            fontSize: 'clamp(32px, 8vw, 80px)',
-            color: C.bright,
-            lineHeight: 0.9,
-            letterSpacing: '-0.04em',
-            margin: '0 0 24px 0',
-            textTransform: 'uppercase',
-            wordBreak: 'break-word',
+            display: 'inline-flex',
+            alignItems: 'baseline',
+            gap: 'clamp(8px, 2vw, 24px)',
+            textDecoration: 'none',
+            marginBottom: '24px',
           }}
         >
-          Vamos
-          <br />
-          <span style={{ color: C.accent }}>Conversar</span>
-        </motion.h2>
+          <h2
+            className="mega-cta-text"
+            style={{
+              fontFamily: DISPLAY,
+              fontWeight: 800,
+              fontSize: 'clamp(32px, 8vw, 80px)',
+              color: C.bright,
+              lineHeight: 0.9,
+              letterSpacing: '-0.04em',
+              margin: 0,
+              textTransform: 'uppercase',
+              wordBreak: 'break-word',
+              transition: 'color 0.3s ease',
+            }}
+          >
+            Vamos
+            <br />
+            <span style={{ color: C.accent }}>Conversar</span>
+          </h2>
+          <span
+            className="mega-cta-arrow"
+            aria-hidden
+            style={{
+              fontFamily: DISPLAY,
+              fontSize: 'clamp(24px, 4vw, 48px)',
+              fontWeight: 800,
+              color: C.accent,
+              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          >
+            ↗
+          </span>
+        </motion.a>
 
         <motion.p
           initial={{ opacity: 0 }}
@@ -850,7 +930,7 @@ function Contact() {
           transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: MONO,
             fontSize: '14px',
             color: C.dim,
             maxWidth: '500px',
@@ -902,6 +982,8 @@ function Contact() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                gap: '16px',
+                flexWrap: 'wrap',
                 padding: '20px 0',
                 borderBottom: `1px solid ${C.border}`,
                 textDecoration: 'none',
@@ -909,8 +991,9 @@ function Contact() {
               }}
             >
               <span
+                className="contact-label"
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: MONO,
                   fontSize: '12px',
                   color: C.dim,
                   textTransform: 'uppercase',
@@ -918,21 +1001,21 @@ function Contact() {
                   fontWeight: 700,
                   transition: 'color 0.3s',
                 }}
-                className="contact-label"
               >
                 {link.label}
               </span>
 
               <span
+                className="contact-value"
                 style={{
-                  fontFamily: "'Bricolage Grotesque', sans-serif",
+                  fontFamily: DISPLAY,
                   fontSize: 'clamp(16px, 2.5vw, 24px)',
                   fontWeight: 600,
                   color: C.bright,
                   letterSpacing: '-0.01em',
                   transition: 'all 0.3s',
+                  wordBreak: 'break-word',
                 }}
-                className="contact-value"
               >
                 {link.value}
               </span>
@@ -947,25 +1030,13 @@ function Contact() {
 // ─── App ─────────────────────────────────────────────────────────────────────
 export default function App() {
   useCustomCursor()
-  useFonts()
-
-  useEffect(() => {
-    document.body.style.backgroundColor = C.bg
-    document.body.style.color = C.text
-    document.body.style.margin = '0'
-    document.body.style.overflowX = 'hidden'
-    return () => {
-      document.body.style.backgroundColor = ''
-      document.body.style.color = ''
-      document.body.style.overflowX = ''
-    }
-  }, [])
 
   return (
     <div style={{ backgroundColor: C.bg, minHeight: '100dvh', color: C.text, overflowX: 'hidden' }}>
       <Nav />
       <main>
         <Hero />
+        <Marquee />
         <About />
         <Stack />
         <Projects />
@@ -986,86 +1057,36 @@ export default function App() {
             style={{
               color: C.dim,
               fontSize: '12px',
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: MONO,
               textTransform: 'uppercase',
             }}
           >
             © {new Date().getFullYear()} Guilherme Müller
           </span>
           <div style={{ display: 'flex', gap: '24px' }}>
-            <a
-              href="https://github.com/coder-muller"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                color: C.dim,
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: '12px',
-                textDecoration: 'none',
-                textTransform: 'uppercase',
-              }}
-            >
-              GitHub
-            </a>
-            <a
-              href="https://www.linkedin.com/in/guilherme-cmuller"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                color: C.dim,
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: '12px',
-                textDecoration: 'none',
-                textTransform: 'uppercase',
-              }}
-            >
-              LinkedIn
-            </a>
+            {[
+              { label: 'GitHub', href: 'https://github.com/coder-muller' },
+              { label: 'LinkedIn', href: 'https://www.linkedin.com/in/guilherme-cmuller' },
+            ].map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  color: C.dim,
+                  fontFamily: MONO,
+                  fontSize: '12px',
+                  textDecoration: 'none',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {l.label}
+              </a>
+            ))}
           </div>
         </footer>
       </main>
-
-      <style>{`
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          width: 100%;
-          transform: scaleX(0);
-          height: 1px;
-          bottom: 0;
-          left: 0;
-          background-color: ${C.accent};
-          transform-origin: bottom right;
-          transition: transform 0.25s ease-out;
-        }
-        .nav-link:hover::after {
-          transform: scaleX(1);
-          transform-origin: bottom left;
-        }
-        .project-row:hover .project-title {
-          color: ${C.accent} !important;
-        }
-
-        .stack-item:hover {
-          background-color: ${C.bg};
-        }
-        .stack-item:hover .stack-item-text {
-          transform: translateX(8px);
-          color: ${C.accent} !important;
-        }
-        .stack-item:hover .stack-item-arrow {
-          opacity: 1 !important;
-          transform: translateX(0) !important;
-        }
-
-        .contact-link-row:hover .contact-label {
-          color: ${C.accent} !important;
-        }
-        .contact-link-row:hover .contact-value {
-          color: ${C.accent} !important;
-          transform: translateX(-8px);
-        }
-      `}</style>
     </div>
   )
 }
