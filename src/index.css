@@ -8,6 +8,7 @@
   --color-accent: #ff3b00;
   --color-dim: #8a8a8a;
   --color-bright: #ffffff;
+  --color-text: #f5f5f5;
 
   --font-display: 'Bricolage Grotesque', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -22,7 +23,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   background-color: var(--color-bg);
-  color: #f5f5f5;
+  color: var(--color-text);
   font-family: var(--font-mono);
 }
 
@@ -142,7 +143,7 @@ h3 {
   animation: marquee 28s linear infinite;
 }
 
-/* ── hover states ── */
+/* ── nav ── */
 .nav-link::after {
   content: '';
   position: absolute;
@@ -161,49 +162,146 @@ h3 {
   transform-origin: bottom left;
 }
 
-.project-row {
-  transition: background-color 0.35s ease;
+/* ── projects: stroke titles that fill on hover ── */
+.project-title {
+  color: transparent;
+  -webkit-text-stroke: 1.25px #6a6a6a;
+  transition:
+    color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    -webkit-text-stroke-color 0.4s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.project-row:hover {
-  background-color: var(--color-surface);
+.project-link:hover .project-title,
+.project-link:focus-visible .project-title {
+  color: var(--color-accent);
+  -webkit-text-stroke-color: transparent;
+  transform: translateX(clamp(4px, 0.6vw, 12px));
 }
 
-.project-row:hover .project-title {
-  color: var(--color-accent) !important;
-  transform: translateX(clamp(4px, 1vw, 16px));
+.project-index {
+  transition: color 0.3s ease;
 }
 
-.project-row:hover .project-arrow {
-  opacity: 1 !important;
-  transform: translate(0, 0) !important;
+.project-link:hover .project-index,
+.project-link:focus-visible .project-index {
+  color: var(--color-accent);
 }
 
-.stack-item:hover {
-  background-color: var(--color-bg);
+.project-arrow {
+  opacity: 0;
+  transform: translate(-10px, 10px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.stack-item:hover .stack-item-text {
-  transform: translateX(8px);
-  color: var(--color-accent) !important;
+.project-link:hover .project-arrow,
+.project-link:focus-visible .project-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
 }
 
-.contact-link-row:hover .contact-label {
-  color: var(--color-accent) !important;
+/* touch: sem hover, títulos preenchidos e seta visível */
+@media (hover: none) {
+  .project-title {
+    color: var(--color-bright);
+    -webkit-text-stroke: 0;
+  }
+
+  .project-arrow {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.contact-link-row:hover .contact-value {
-  color: var(--color-accent) !important;
-  transform: translateX(-8px);
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.25;
+  }
 }
 
-.mega-cta:hover .mega-cta-text {
-  color: var(--color-accent) !important;
-  -webkit-text-stroke-color: var(--color-accent);
+.status-live {
+  animation: status-pulse 2s ease-in-out infinite;
 }
 
-.mega-cta:hover .mega-cta-arrow {
-  transform: translate(10px, -10px);
+.github-strip .strip-title {
+  transition: color 0.3s ease;
+}
+
+.github-strip:hover .strip-title,
+.github-strip:focus-visible .strip-title {
+  color: var(--color-accent);
+}
+
+.github-strip .strip-arrow {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.github-strip:hover .strip-arrow,
+.github-strip:focus-visible .strip-arrow {
+  transform: translate(6px, -6px);
+}
+
+/* ── stack: filled words turn to outline on hover (inverse of projects) ── */
+.stack-word {
+  -webkit-text-stroke: 1px transparent;
+  transition:
+    color 0.3s ease,
+    -webkit-text-stroke-color 0.3s ease,
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .stack-word:hover {
+    color: transparent;
+    -webkit-text-stroke-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+}
+
+/* ── contact ── */
+.contact-cta .cta-plain {
+  transition: color 0.3s ease;
+}
+
+.contact-cta:hover .cta-plain,
+.contact-cta:focus-visible .cta-plain {
+  color: var(--color-accent);
+}
+
+.contact-cta .cta-arrow {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-cta:hover .cta-arrow,
+.contact-cta:focus-visible .cta-arrow {
+  transform: translate(0.12em, -0.12em);
+}
+
+.contact-card .card-value,
+.contact-card .card-arrow {
+  transition:
+    color 0.3s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-card:hover .card-value,
+.contact-card:focus-visible .card-value {
+  color: var(--color-accent);
+}
+
+.contact-card:hover .card-arrow,
+.contact-card:focus-visible .card-arrow {
+  color: var(--color-accent);
+  transform: translate(3px, -3px);
 }
 
 /* ── reduced motion ── */

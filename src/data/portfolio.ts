@@ -3,55 +3,103 @@ export type NavItem = {
   label: string
 }
 
-export type StatItem = {
-  value: string
-  lines: [string, string]
-}
-
-export type StackItem = {
-  name: string
-  tag: string
-  description: string
-}
+export type ProjectStatus = 'production' | 'alpha'
 
 export type ProjectItem = {
   href: string
-  meta: string
   name: string
+  meta: string
+  status: ProjectStatus
   description: string
   pills: string[]
 }
 
+export type StackGroup = {
+  group: string
+  items: string[]
+}
+
+export type StatItem = {
+  target: number
+  suffix?: string
+  pad?: number
+  label: string
+  desc: string
+}
+
 export const navItems: NavItem[] = [
-  { href: '#about', label: 'sobre' },
-  { href: '#stack', label: 'stack' },
-  { href: '#projects', label: 'projetos' },
-  { href: '#contact', label: 'contato' },
+  { href: '#about', label: 'Sobre' },
+  { href: '#projects', label: 'Projetos' },
+  { href: '#stack', label: 'Stack' },
+  { href: '#contact', label: 'Contato' },
 ]
 
 export const projects: ProjectItem[] = [
   {
-    href: 'https://veltro.vercel.app',
-    meta: 'Alfa · 2025',
-    name: 'Veltro',
-    description:
-      'Plataforma de consolidação de carteiras de investimento para o mercado brasileiro. Renda fixa e variável em um único painel. Agrega ativos de diferentes corretoras, calcula rentabilidade real e apresenta a distribuição do portfólio de forma clara. Atualmente em fase alfa.',
-    pills: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL'],
-  },
-  {
     href: 'https://kiaro.xyz',
-    meta: 'Produção · 2026',
     name: 'Kiaro',
+    meta: 'Em produção · 2026',
+    status: 'production',
     description:
-      'App de gestão para empresas que cobram mensalidades de clientes, centralizando contratos, clientes, cobranças recorrentes e um módulo de controle financeiro simplificado. Elimina planilhas, automatiza o acompanhamento de inadimplência e dá visibilidade real sobre a receita da empresa.',
+      'Gestão para empresas que vivem de mensalidades: contratos, clientes, cobranças recorrentes e um financeiro enxuto em um só lugar. Elimina planilhas, acompanha a inadimplência sozinho e mostra a receita real da empresa.',
     pills: ['Next.js', 'shadcn/ui', 'Prisma', 'Better Auth'],
   },
   {
-    href: 'https://github.com/coder-muller',
-    meta: 'Open source · contínuo',
-    name: 'Mais no GitHub',
+    href: 'https://veltro.vercel.app',
+    name: 'Veltro',
+    meta: 'Alfa · 2025',
+    status: 'alpha',
     description:
-      'Experimentos, utilitários e ferramentas construídos para resolver problemas reais, publicados abertamente e compartilhados com a comunidade.',
-    pills: ['Vários', 'Open Source'],
+      'Consolidação de carteiras de investimento para o mercado brasileiro: renda fixa e variável, de várias corretoras, em um único painel — com rentabilidade real e distribuição clara do portfólio.',
+    pills: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL'],
   },
+]
+
+export const stacks: StackGroup[] = [
+  { group: 'Frontend', items: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Motion'] },
+  { group: 'Backend', items: ['Node.js', 'Bun', 'Elysia', 'Express', 'tRPC'] },
+  { group: 'Database', items: ['PostgreSQL', 'Prisma', 'Redis', 'Docker', 'Neon'] },
+  { group: 'Ecosystem', items: ['Stripe', 'Better Auth', 'Resend', 'Vercel', 'Figma'] },
+]
+
+export const stats: StatItem[] = [
+  {
+    target: 3,
+    suffix: '+',
+    label: 'Anos de estrada',
+    desc: 'Construindo produtos digitais de ponta a ponta.',
+  },
+  {
+    target: 10,
+    suffix: '+',
+    label: 'Projetos entregues',
+    desc: 'Rodando em produção, com usuários reais.',
+  },
+  {
+    target: 200,
+    suffix: '+',
+    label: 'Clientes reais',
+    desc: 'Usando o que eu construo e mantenho.',
+  },
+  {
+    target: 2,
+    pad: 2,
+    label: 'Produtos próprios',
+    desc: 'Kiaro e Veltro — um em produção, outro em alfa.',
+  },
+]
+
+export const contactLinks = [
+  {
+    label: 'Email',
+    value: 'guilhermemullerxx@gmail.com',
+    href: 'mailto:guilhermemullerxx@gmail.com',
+  },
+  { label: 'GitHub', value: 'coder-muller', href: 'https://github.com/coder-muller' },
+  {
+    label: 'LinkedIn',
+    value: 'guilherme-cmuller',
+    href: 'https://www.linkedin.com/in/guilherme-cmuller',
+  },
+  { label: 'Instagram', value: '@coder.muller', href: 'https://instagram.com/coder.muller' },
 ]
