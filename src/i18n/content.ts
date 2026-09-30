@@ -40,6 +40,7 @@ export type Dictionary = {
     openMenu: string
     closeMenu: string
     language: string
+    skip: string
   }
   hero: {
     status: string
@@ -130,6 +131,7 @@ const pt: Dictionary = {
     openMenu: 'Abrir menu',
     closeMenu: 'Fechar menu',
     language: 'Idioma',
+    skip: 'Pular para o conteúdo',
   },
   hero: {
     status: 'Disponível para novos projetos',
@@ -270,6 +272,7 @@ const en: Dictionary = {
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     language: 'Language',
+    skip: 'Skip to content',
   },
   hero: {
     status: 'Available for new projects',

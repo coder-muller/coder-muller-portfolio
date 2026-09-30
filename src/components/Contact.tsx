@@ -3,7 +3,6 @@ import { AnimatePresence, motion, useReducedMotion, useSpring } from 'motion/rea
 import { ArrowUpRightIcon, CheckIcon, CopyIcon } from '@phosphor-icons/react'
 import { useLocale } from '../i18n/locale'
 import { EMAIL, socials } from '../i18n/content'
-import { EASE_OUT } from '../lib/motion'
 import { Reveal, SwapArrow, WordsReveal } from './primitives'
 
 // O botão é puxado de leve pelo cursor e volta com mola quando ele sai.
@@ -30,7 +29,7 @@ function MagneticLink({ href, children }: { href: string; children: ReactNode })
       onPointerMove={onMove}
       onPointerLeave={reset}
       style={{ x, y }}
-      className="group inline-flex h-16 items-center gap-3 rounded-full bg-accent pr-6 pl-8 text-[17px] font-medium whitespace-nowrap text-accent-fg transition-[background-color,scale] duration-200 hover:bg-[oklch(0.76_0.19_42)] active:scale-[0.97]"
+      className="group inline-flex h-16 items-center gap-3 rounded-full bg-accent pr-6 pl-8 text-[17px] font-medium whitespace-nowrap text-accent-fg transition-[background-color,scale] duration-200 hover:bg-[oklch(0.76_0.19_42)] active:scale-[0.96]"
     >
       {children}
       <SwapArrow className="size-5" />
@@ -61,17 +60,17 @@ function CopyEmail() {
     <button
       type="button"
       onClick={copy}
-      className="group inline-flex h-16 max-w-full items-center gap-3 rounded-full pr-6 pl-7 text-[15px] text-fg ring-1 ring-line-strong ring-inset transition-[background-color,scale] duration-200 hover:bg-fg/[0.06] active:scale-[0.97]"
+      className="group inline-flex h-16 max-w-full items-center gap-3 rounded-full pr-6 pl-7 text-[15px] text-fg ring-1 ring-line-strong ring-inset transition-[background-color,scale] duration-200 hover:bg-fg/[0.06] active:scale-[0.96]"
     >
       <span className="truncate font-mono text-[14px] text-muted">{EMAIL}</span>
       <span className="relative grid size-5 shrink-0 place-items-center">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
             key={copied ? 'check' : 'copy'}
-            initial={{ opacity: 0, scale: 0.6, filter: 'blur(4px)' }}
+            initial={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
             animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, scale: 0.6, filter: 'blur(4px)' }}
-            transition={{ duration: 0.2, ease: EASE_OUT }}
+            exit={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
+            transition={{ type: 'spring', duration: 0.3, bounce: 0 }}
             className="grid place-items-center"
           >
             {copied ? (
@@ -118,14 +117,14 @@ export default function Contact() {
 
         <Reveal delay={0.4} className="mt-16 border-t border-line pt-8">
           <p className="font-mono text-[12px] text-subtle">{t.contact.socialLabel}</p>
-          <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-3">
+          <ul className="mt-2 flex flex-wrap gap-x-8 gap-y-1">
             {socials.map((s) => (
               <li key={s.label}>
                 <a
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-1.5 text-[17px] text-fg"
+                  className="group inline-flex items-center gap-1.5 py-2 text-[17px] text-fg"
                 >
                   <span className="relative">
                     {s.label}

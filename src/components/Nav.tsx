@@ -18,6 +18,8 @@ const SECTION_IDS: SectionId[] = ['top', 'about', 'projects', 'services', 'stack
 
 // A ilha se comporta como o notch do Light Notch: nasce compacta, se expande,
 // e no mobile vira o próprio menu. O `layout` anima a forma entre os estados.
+const ICON_SWAP = { type: 'spring', duration: 0.3, bounce: 0 } as const
+
 const ISLAND: Transition = { type: 'spring', duration: 0.55, bounce: 0.18 }
 
 const fadeIn = {
@@ -51,6 +53,13 @@ export default function Nav() {
 
   return (
     <>
+      <a
+        href="#content"
+        className="sr-only z-[60] rounded-full bg-accent px-5 py-3 text-[15px] font-medium text-accent-fg focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+      >
+        {t.nav.skip}
+      </a>
+
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -91,15 +100,15 @@ export default function Nav() {
                 aria-expanded={menuOpen}
                 aria-controls="island-menu"
                 aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
-                className="ml-auto grid size-11 place-items-center rounded-full text-fg transition-[background-color,scale] duration-200 hover:bg-fg/[0.08] active:scale-[0.94]"
+                className="ml-auto grid size-11 place-items-center rounded-full text-fg transition-[background-color,scale] duration-200 hover:bg-fg/[0.08] active:scale-[0.96]"
               >
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.span
                     key={menuOpen ? 'x' : 'list'}
-                    initial={{ opacity: 0, rotate: -45, scale: 0.8 }}
-                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                    exit={{ opacity: 0, rotate: 45, scale: 0.8 }}
-                    transition={{ duration: 0.2, ease: EASE_OUT }}
+                    initial={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
+                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
+                    transition={ICON_SWAP}
                     className="grid place-items-center"
                   >
                     {menuOpen ? <XIcon size={20} /> : <ListIcon size={20} />}
@@ -130,7 +139,7 @@ function Logo() {
       layout="position"
       href="#top"
       aria-label={`Guilherme Müller, ${t.footer.backToTop.toLowerCase()}`}
-      className="relative grid size-11 shrink-0 place-items-center rounded-full bg-bg text-[13px] font-semibold tracking-[-0.02em] text-fg transition-[scale] duration-200 active:scale-[0.94]"
+      className="relative grid size-11 shrink-0 place-items-center rounded-full bg-bg text-[13px] font-semibold tracking-[-0.02em] text-fg transition-[scale] duration-200 active:scale-[0.96]"
     >
       <svg viewBox="0 0 44 44" className="absolute inset-0 size-full -rotate-90" aria-hidden>
         <circle cx="22" cy="22" r="20.5" fill="none" stroke="var(--color-line-strong)" strokeWidth="1" />
@@ -218,7 +227,7 @@ function DesktopLinks({ active }: { active: SectionId }) {
       <motion.a
         variants={childFade}
         href="#contact"
-        className="group ml-1 inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-5 text-[14px] font-medium whitespace-nowrap text-accent-fg transition-[background-color,scale] duration-200 hover:bg-[oklch(0.76_0.19_42)] active:scale-[0.97]"
+        className="group ml-1 inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-5 text-[14px] font-medium whitespace-nowrap text-accent-fg transition-[background-color,scale] duration-200 hover:bg-[oklch(0.76_0.19_42)] active:scale-[0.96]"
       >
         {t.nav.cta}
         <ArrowUpRightIcon
@@ -278,7 +287,7 @@ function MobileMenu({ active, onNavigate }: { active: SectionId; onNavigate: () 
         <a
           href="#contact"
           onClick={onNavigate}
-          className="inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-5 text-[15px] font-medium text-accent-fg transition-[scale] duration-200 active:scale-[0.97]"
+          className="inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-5 text-[15px] font-medium text-accent-fg transition-[scale] duration-200 active:scale-[0.96]"
         >
           {t.nav.cta}
           <ArrowUpRightIcon weight="bold" className="size-3.5" aria-hidden />
@@ -306,7 +315,7 @@ function LocaleToggle({ id }: { id: string }) {
           aria-pressed={locale === l.id}
           aria-label={l.name}
           onClick={() => setLocale(l.id)}
-          className={`relative h-9 w-11 rounded-full font-mono text-[12px] transition-colors duration-200 ${
+          className={`relative h-10 w-11 rounded-full font-mono text-[12px] transition-colors duration-200 ${
             locale === l.id ? 'text-fg' : 'text-subtle hover:text-muted'
           }`}
         >

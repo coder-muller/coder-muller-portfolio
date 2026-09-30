@@ -17,7 +17,7 @@ export default function App() {
     <LocaleProvider>
       <Nav />
       <LocaleFade>
-        <main>
+        <main id="content">
           <Hero />
           <About />
           <Projects />

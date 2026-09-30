@@ -20,7 +20,7 @@ export default function Footer() {
         <p>{t.footer.madeWith}</p>
         <a
           href="#top"
-          className="group inline-flex items-center gap-1.5 text-fg transition-colors duration-200 hover:text-accent"
+          className="group -my-2 inline-flex items-center gap-1.5 py-2 text-fg transition-colors duration-200 hover:text-accent"
         >
           {t.footer.backToTop}
           <ArrowUpIcon

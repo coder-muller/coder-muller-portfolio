@@ -148,7 +148,7 @@ export function LinkButton({
 
   return (
     <a
-      className={`group inline-flex h-12 shrink-0 items-center gap-2.5 rounded-full pr-5 pl-6 text-[15px] font-medium whitespace-nowrap transition-[background-color,scale] duration-200 active:scale-[0.97] ${styles} ${className}`}
+      className={`group inline-flex h-12 shrink-0 items-center gap-2.5 rounded-full pr-5 pl-6 text-[15px] font-medium whitespace-nowrap transition-[background-color,scale] duration-200 active:scale-[0.96] ${styles} ${className}`}
       {...props}
     >
       {children}

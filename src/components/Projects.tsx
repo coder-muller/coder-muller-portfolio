@@ -167,7 +167,7 @@ function ProjectCard({
 
         <div
           aria-hidden
-          className="relative isolate grid min-h-[340px] place-items-center overflow-hidden rounded-[22px] bg-bg ring-1 ring-line sm:min-h-[400px] lg:min-h-0"
+          className="relative isolate grid min-h-[340px] place-items-center overflow-hidden rounded-[20px] bg-bg ring-1 ring-line sm:min-h-[400px] lg:min-h-0"
         >
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(50%_50%_at_50%_50%,oklch(0.72_0.19_42/0.08),transparent_75%)]" />
           <Motif active={inView} still={!!reduce} />
