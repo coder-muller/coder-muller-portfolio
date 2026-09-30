@@ -126,18 +126,25 @@ export function RollText({
   active?: boolean
   className?: string
 }) {
-  const trigger =
-    active === undefined
-      ? 'group-hover:-translate-y-full group-focus-visible:-translate-y-full'
-      : active
-        ? '-translate-y-full'
-        : ''
+  const hover = active === undefined
+  // Letras separadas perdem o kerning; por isso as duas cópias dividem a mesma
+  // célula do grid e a largura sai da maior delas, já com as letras separadas.
+  const out = hover
+    ? 'group-hover:-translate-y-full group-focus-visible:-translate-y-full'
+    : active
+      ? '-translate-y-full'
+      : ''
+  const into = hover
+    ? 'translate-y-full group-hover:translate-y-0 group-focus-visible:translate-y-0'
+    : active
+      ? 'translate-y-0'
+      : 'translate-y-full'
 
-  const letters = (value: string) =>
+  const letters = (value: string, motion: string) =>
     [...value].map((ch, i) => (
       <span
         key={i}
-        className={`inline-block pb-[0.12em] whitespace-pre transition-transform duration-500 ease-out motion-reduce:transition-none ${trigger}`}
+        className={`inline-block pb-[0.12em] whitespace-pre transition-transform duration-500 ease-out motion-reduce:transition-none ${motion}`}
         style={{ transitionDelay: `${i * 14}ms` }}
       >
         {ch}
@@ -145,16 +152,15 @@ export function RollText({
     ))
 
   return (
-    <span className={`relative -mb-[0.12em] inline-flex flex-col overflow-hidden ${className}`}>
+    <span
+      className={`relative -mb-[0.12em] inline-grid justify-items-center overflow-hidden ${className}`}
+    >
       <span className="sr-only">{active && swapTo ? swapTo : text}</span>
-      <span aria-hidden>{letters(text)}</span>
-      {swapTo && (
-        <span aria-hidden className="invisible h-0 whitespace-pre">
-          {swapTo}
-        </span>
-      )}
-      <span aria-hidden className="absolute top-full left-0">
-        {letters(swapTo ?? text)}
+      <span aria-hidden className="col-start-1 row-start-1 whitespace-nowrap">
+        {letters(text, out)}
+      </span>
+      <span aria-hidden className="col-start-1 row-start-1 whitespace-nowrap">
+        {letters(swapTo ?? text, into)}
       </span>
     </span>
   )
