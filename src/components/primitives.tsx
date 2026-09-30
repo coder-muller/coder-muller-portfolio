@@ -190,7 +190,7 @@ export function LinkButton({
 }: LinkButtonProps) {
   const styles =
     variant === 'primary'
-      ? 'bg-accent text-accent-fg hover:bg-[oklch(0.76_0.19_42)]'
+      ? 'bg-accent text-accent-fg hover:bg-accent-hover'
       : 'text-fg ring-1 ring-line-strong ring-inset hover:bg-fg/[0.06]'
 
   return (

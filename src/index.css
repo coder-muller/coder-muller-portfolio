@@ -1,18 +1,23 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-bg: oklch(0.155 0.004 60);
-  --color-surface: oklch(0.185 0.005 60);
-  --color-raised: oklch(0.225 0.006 60);
-  --color-line: oklch(0.965 0.004 80 / 0.08);
-  --color-line-strong: oklch(0.965 0.004 80 / 0.16);
-  --color-fg: oklch(0.965 0.004 80);
-  --color-muted: oklch(0.74 0.008 70);
-  --color-subtle: oklch(0.58 0.008 70);
-  --color-accent: oklch(0.72 0.19 42);
-  --color-accent-soft: oklch(0.72 0.19 42 / 0.14);
-  --color-accent-fg: oklch(0.17 0.03 42);
+/* Tokens por tema. `inline` faz as utilities lerem var(--x) direto, então um
+   elemento com data-theme (como o MacBook) troca de tema só no seu escopo. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+}
 
+@theme {
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
 
@@ -21,17 +26,78 @@
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+:root,
+[data-theme='dark'] {
+  --bg: oklch(0.155 0.004 60);
+  --surface: oklch(0.185 0.005 60);
+  --raised: oklch(0.225 0.006 60);
+  --line: oklch(0.965 0.004 80 / 0.08);
+  --line-strong: oklch(0.965 0.004 80 / 0.16);
+  --fg: oklch(0.965 0.004 80);
+  --muted: oklch(0.74 0.008 70);
+  --subtle: oklch(0.58 0.008 70);
+  --accent: oklch(0.72 0.19 42);
+  --accent-hover: oklch(0.76 0.19 42);
+  --accent-soft: oklch(0.72 0.19 42 / 0.14);
+  --accent-fg: oklch(0.17 0.03 42);
+  --glass: oklch(0.2 0.005 60 / 0.72);
+  --shadow: oklch(0 0 0 / 0.35);
+  --grain: 0.035;
+  color-scheme: dark;
+}
+
+/* Claro: mesmos papéis, luminância invertida. O acento escurece para manter
+   contraste sobre o fundo claro. */
+[data-theme='light'] {
+  --bg: oklch(0.975 0.003 80);
+  --surface: oklch(0.995 0.002 80);
+  --raised: oklch(0.95 0.004 80);
+  --line: oklch(0.2 0.006 60 / 0.09);
+  --line-strong: oklch(0.2 0.006 60 / 0.17);
+  --fg: oklch(0.19 0.006 60);
+  --muted: oklch(0.44 0.008 70);
+  --subtle: oklch(0.56 0.008 70);
+  --accent: oklch(0.64 0.2 40);
+  --accent-hover: oklch(0.6 0.2 40);
+  --accent-soft: oklch(0.64 0.2 40 / 0.14);
+  --accent-fg: oklch(0.17 0.03 42);
+  --glass: oklch(0.995 0.002 80 / 0.72);
+  --shadow: oklch(0.3 0.02 60 / 0.12);
+  --grain: 0.05;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: oklch(0.975 0.003 80);
+    --surface: oklch(0.995 0.002 80);
+    --raised: oklch(0.95 0.004 80);
+    --line: oklch(0.2 0.006 60 / 0.09);
+    --line-strong: oklch(0.2 0.006 60 / 0.17);
+    --fg: oklch(0.19 0.006 60);
+    --muted: oklch(0.44 0.008 70);
+    --subtle: oklch(0.56 0.008 70);
+    --accent: oklch(0.64 0.2 40);
+    --accent-hover: oklch(0.6 0.2 40);
+    --accent-soft: oklch(0.64 0.2 40 / 0.14);
+    --accent-fg: oklch(0.17 0.03 42);
+    --glass: oklch(0.995 0.002 80 / 0.72);
+    --shadow: oklch(0.3 0.02 60 / 0.12);
+    --grain: 0.05;
+    color-scheme: light;
+  }
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    color-scheme: dark;
-    background-color: var(--color-bg);
+    background-color: var(--bg);
   }
 
   body {
     margin: 0;
-    background-color: var(--color-bg);
-    color: var(--color-fg);
+    background-color: var(--bg);
+    color: var(--fg);
     font-family: var(--font-sans);
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -50,12 +116,12 @@
   }
 
   ::selection {
-    background-color: var(--color-accent);
-    color: var(--color-accent-fg);
+    background-color: var(--accent);
+    color: var(--accent-fg);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
     border-radius: 6px;
   }
@@ -68,8 +134,15 @@ body::after {
   inset: 0;
   z-index: 100;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: var(--grain);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* troca de tema: o novo tema entra num círculo a partir do botão (JS) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* lenis */
@@ -87,15 +160,15 @@ html.lenis body {
 }
 
 @utility glass {
-  background-color: oklch(0.2 0.005 60 / 0.72);
+  background-color: var(--glass);
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   box-shadow:
     inset 0 1px 0 oklch(1 0 0 / 0.07),
-    0 12px 40px oklch(0 0 0 / 0.35);
+    0 12px 40px var(--shadow);
 
   @media (prefers-reduced-transparency: reduce) {
-    background-color: var(--color-raised);
+    background-color: var(--raised);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }

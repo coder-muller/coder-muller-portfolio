@@ -29,8 +29,8 @@ export default function KiaroMotif({ active, still }: { active: boolean; still: 
   return (
     <div className="relative aspect-square w-[min(78%,320px)]">
       <svg viewBox="0 0 200 200" className="absolute inset-0 size-full" aria-hidden>
-        <circle cx="100" cy="100" r="78" fill="none" stroke="var(--color-line-strong)" strokeDasharray="1 5" />
-        <circle cx="100" cy="100" r="54" fill="none" stroke="var(--color-line)" />
+        <circle cx="100" cy="100" r="78" fill="none" stroke="var(--line-strong)" strokeDasharray="1 5" />
+        <circle cx="100" cy="100" r="54" fill="none" stroke="var(--line)" />
       </svg>
       <motion.div
         className="absolute inset-0"
@@ -38,7 +38,7 @@ export default function KiaroMotif({ active, still }: { active: boolean; still: 
         transition={{ type: 'spring', duration: 0.6, bounce: 0.2 }}
       >
         <svg viewBox="0 0 200 200" className="size-full" aria-hidden>
-          <line x1="100" y1="46" x2="100" y2="32" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" />
+          <line x1="100" y1="46" x2="100" y2="32" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" />
         </svg>
       </motion.div>
 
@@ -57,7 +57,7 @@ export default function KiaroMotif({ active, still }: { active: boolean; still: 
             <span
               className={`block size-2.5 rounded-full transition-[background-color,box-shadow,scale] duration-500 ease-out ${
                 state === 'now'
-                  ? 'scale-150 bg-accent shadow-[0_0_0_6px_var(--color-accent-soft)]'
+                  ? 'scale-150 bg-accent shadow-[0_0_0_6px_var(--accent-soft)]'
                   : state === 'paid'
                     ? 'bg-fg/70'
                     : 'bg-fg/15'

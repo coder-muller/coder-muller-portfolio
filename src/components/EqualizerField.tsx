@@ -4,14 +4,9 @@ import { useEffect, useRef } from 'react'
 // coluna é uma barra que respira sozinha e sobe perto do ponteiro.
 const CELL = 11
 const DOT = 3
-const DIM = 'oklch(0.965 0.004 80 / 0.07)'
-const ACCENT = 'oklch(0.72 0.19 42)'
+const DIM_ALPHA = 0.08
 const BODY_LEVELS = 6
-
-function bodyColor(level: number) {
-  const alpha = 0.16 + (level / (BODY_LEVELS - 1)) * 0.5
-  return `oklch(0.965 0.004 80 / ${alpha.toFixed(3)})`
-}
+const BODY_ALPHAS = Array.from({ length: BODY_LEVELS }, (_, i) => 0.16 + (i / (BODY_LEVELS - 1)) * 0.5)
 
 export default function EqualizerField({ className = '' }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -22,7 +17,15 @@ export default function EqualizerField({ className = '' }: { className?: string 
     if (!canvas || !ctx) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const bodyColors = Array.from({ length: BODY_LEVELS }, (_, i) => bodyColor(i))
+    // As cores vêm do tema atual; trocar de tema relê os tokens.
+    let fg = ''
+    let accent = ''
+    const readColors = () => {
+      const style = getComputedStyle(canvas)
+      fg = style.getPropertyValue('--fg').trim()
+      accent = style.getPropertyValue('--accent').trim()
+    }
+    readColors()
 
     let width = 0
     let height = 0
@@ -72,7 +75,8 @@ export default function EqualizerField({ className = '' }: { className?: string 
 
       ctx.clearRect(0, 0, width, height)
 
-      ctx.fillStyle = DIM
+      ctx.fillStyle = fg
+      ctx.globalAlpha = DIM_ALPHA
       for (let c = 0; c < cols; c++) {
         const x = offsetX + c * CELL
         for (let r = 0; r < rows; r++) ctx.fillRect(x, r * CELL, DOT, DOT)
@@ -85,14 +89,17 @@ export default function EqualizerField({ className = '' }: { className?: string 
         if (lit < 1) continue
         const x = offsetX + c * CELL
 
+        ctx.fillStyle = fg
         for (let i = 0; i < lit - 1; i++) {
           const level = Math.floor((i / rows) * BODY_LEVELS)
-          ctx.fillStyle = bodyColors[Math.min(level, BODY_LEVELS - 1)]
+          ctx.globalAlpha = BODY_ALPHAS[Math.min(level, BODY_LEVELS - 1)]
           ctx.fillRect(x, (rows - 1 - i) * CELL, DOT, DOT)
         }
-        ctx.fillStyle = ACCENT
+        ctx.globalAlpha = 1
+        ctx.fillStyle = accent
         ctx.fillRect(x, (rows - lit) * CELL, DOT, DOT)
       }
+      ctx.globalAlpha = 1
     }
 
     const loop = (now: number) => {
@@ -122,11 +129,18 @@ export default function EqualizerField({ className = '' }: { className?: string 
       if (visible) play()
     })
     const onVisibility = () => !document.hidden && visible && play()
+    const scheme = window.matchMedia('(prefers-color-scheme: light)')
+    const onTheme = () => {
+      readColors()
+      if (reduce || !visible) draw(performance.now())
+    }
 
     resize()
     resizeObserver.observe(canvas)
     intersection.observe(canvas)
     document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('themechange', onTheme)
+    scheme.addEventListener('change', onTheme)
     if (!reduce) window.addEventListener('pointermove', onPointerMove, { passive: true })
 
     return () => {
@@ -134,6 +148,8 @@ export default function EqualizerField({ className = '' }: { className?: string 
       resizeObserver.disconnect()
       intersection.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('themechange', onTheme)
+      scheme.removeEventListener('change', onTheme)
       window.removeEventListener('pointermove', onPointerMove)
     }
   }, [])

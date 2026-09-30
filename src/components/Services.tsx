@@ -17,7 +17,7 @@ const LAYOUT: Record<Service['id'], string> = {
 }
 
 const BACKDROP: Partial<Record<Service['id'], string>> = {
-  saas: 'bg-[radial-gradient(oklch(0.965_0.004_80/0.09)_1px,transparent_1px)] bg-[size:14px_14px] [mask-image:radial-gradient(80%_90%_at_100%_0%,black,transparent_70%)]',
+  saas: 'bg-[radial-gradient(color-mix(in_oklab,var(--fg)_9%,transparent)_1px,transparent_1px)] bg-[size:14px_14px] [mask-image:radial-gradient(80%_90%_at_100%_0%,black,transparent_70%)]',
   macos:
     'bg-[radial-gradient(70%_90%_at_100%_100%,oklch(0.72_0.19_42/0.16),transparent_70%)]',
 }

@@ -29,7 +29,7 @@ function MagneticLink({ href, children }: { href: string; children: ReactNode })
       onPointerMove={onMove}
       onPointerLeave={reset}
       style={{ x, y }}
-      className="group inline-flex h-16 items-center gap-3 rounded-full bg-accent pr-6 pl-8 text-[17px] font-medium whitespace-nowrap text-accent-fg transition-[background-color,scale] duration-200 hover:bg-[oklch(0.76_0.19_42)] active:scale-[0.96]"
+      className="group inline-flex h-16 items-center gap-3 rounded-full bg-accent pr-6 pl-8 text-[17px] font-medium whitespace-nowrap text-accent-fg transition-[background-color,scale] duration-200 hover:bg-accent-hover active:scale-[0.96]"
     >
       {children}
       <SwapArrow className="size-5" />
@@ -96,7 +96,7 @@ export default function Contact() {
       <div className="relative isolate overflow-hidden rounded-[40px] bg-surface px-6 py-16 ring-1 ring-line sm:px-12 sm:py-24 lg:px-20 lg:py-32">
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(60%_80%_at_85%_110%,oklch(0.72_0.19_42/0.22),transparent_70%),radial-gradient(40%_50%_at_0%_0%,oklch(0.965_0.004_80/0.04),transparent_70%)]"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(60%_80%_at_85%_110%,oklch(0.72_0.19_42/0.22),transparent_70%),radial-gradient(40%_50%_at_0%_0%,color-mix(in_oklab,var(--fg)_4%,transparent),transparent_70%)]"
         />
 
         <h2 className="text-[clamp(48px,8.4vw,136px)] leading-[0.92] font-semibold tracking-[-0.055em] text-fg">

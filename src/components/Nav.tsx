@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type MouseEvent } from 'react'
 import {
   AnimatePresence,
   motion,
@@ -6,12 +6,13 @@ import {
   useReducedMotion,
   useScroll,
 } from 'motion/react'
-import { ArrowUpRightIcon } from '@phosphor-icons/react'
+import { ArrowUpRightIcon, MoonIcon, SunIcon } from '@phosphor-icons/react'
 import { useLocale } from '../i18n/locale'
 import { EMAIL, socials, type Locale, type SectionId } from '../i18n/content'
 import { useActiveSection } from '../hooks/useActiveSection'
 import { EASE_DRAWER, EASE_IN_OUT, EASE_OUT } from '../lib/motion'
 import { lockScroll, scrollToId, unlockScroll } from '../lib/scroll'
+import { resolvedTheme, setTheme, subscribeTheme } from '../lib/theme'
 import LogoMark from './LogoMark'
 import { RollText } from './primitives'
 
@@ -113,29 +114,32 @@ export default function Nav() {
 
           <motion.div {...enter(0.2)} className="pointer-events-auto flex items-center gap-5">
             <SectionIndicator label={active === 'top' || open ? null : t.sections[active]} />
-            <button
-              ref={buttonRef}
-              type="button"
-              onClick={toggle}
-              aria-expanded={open}
-              aria-controls="site-menu"
-              aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
-              className="glass flex h-11 items-center gap-3 rounded-full pr-4 pl-5 text-[14px] font-medium text-fg ring-1 ring-line transition-[scale] duration-200 active:scale-[0.96]"
-            >
-              <RollText text={t.nav.menu} swapTo={t.nav.close} active={open} />
-              <span className="relative block h-2.5 w-3.5" aria-hidden>
-                <span
-                  className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-[top,rotate] duration-300 ease-out ${
-                    open ? 'top-[4.25px] rotate-45' : 'top-0'
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-[top,rotate] duration-300 ease-out ${
-                    open ? 'top-[4.25px] -rotate-45' : 'top-[8.5px]'
-                  }`}
-                />
-              </span>
-            </button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                ref={buttonRef}
+                type="button"
+                onClick={toggle}
+                aria-expanded={open}
+                aria-controls="site-menu"
+                aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
+                className="glass flex h-11 items-center gap-3 rounded-full pr-4 pl-5 text-[14px] font-medium text-fg ring-1 ring-line transition-[scale] duration-200 active:scale-[0.96]"
+              >
+                <RollText text={t.nav.menu} swapTo={t.nav.close} active={open} />
+                <span className="relative block h-2.5 w-3.5" aria-hidden>
+                  <span
+                    className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-[top,rotate] duration-300 ease-out ${
+                      open ? 'top-[4.25px] rotate-45' : 'top-0'
+                    }`}
+                  />
+                  <span
+                    className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-[top,rotate] duration-300 ease-out ${
+                      open ? 'top-[4.25px] -rotate-45' : 'top-[8.5px]'
+                    }`}
+                  />
+                </span>
+              </button>
+            </div>
           </motion.div>
         </div>
       </header>
@@ -144,6 +148,37 @@ export default function Nav() {
         {open && <MenuOverlay key="menu" origin={origin} active={active} onNavigate={go} />}
       </AnimatePresence>
     </>
+  )
+}
+
+function ThemeToggle() {
+  const { t } = useLocale()
+  const theme = useSyncExternalStore(subscribeTheme, resolvedTheme, () => 'dark' as const)
+  const next = theme === 'dark' ? 'light' : 'dark'
+
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        setTheme(next, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
+      }}
+      aria-label={next === 'light' ? t.nav.themeLight : t.nav.themeDark}
+      className="glass grid size-11 place-items-center rounded-full text-fg ring-1 ring-line transition-[scale] duration-200 active:scale-[0.96]"
+    >
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={next}
+          initial={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
+          transition={{ type: 'spring', duration: 0.3, bounce: 0 }}
+          className="grid place-items-center"
+        >
+          {next === 'light' ? <SunIcon size={18} /> : <MoonIcon size={18} />}
+        </motion.span>
+      </AnimatePresence>
+    </button>
   )
 }
 

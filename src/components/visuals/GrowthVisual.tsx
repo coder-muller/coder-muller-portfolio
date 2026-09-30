@@ -62,13 +62,13 @@ export default function GrowthVisual({ active, seen, still }: VisualProps) {
     >
       <defs>
         <linearGradient id="growth-fill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
         </linearGradient>
       </defs>
 
       {[24, 60, 96, 132].map((y) => (
-        <line key={y} x1="0" x2={W} y1={y} y2={y} stroke="var(--color-line)" strokeDasharray="2 6" />
+        <line key={y} x1="0" x2={W} y1={y} y2={y} stroke="var(--line)" strokeDasharray="2 6" />
       ))}
 
       <motion.path
@@ -82,7 +82,7 @@ export default function GrowthVisual({ active, seen, still }: VisualProps) {
         ref={pathRef}
         d={LINE}
         fill="none"
-        stroke="var(--color-accent)"
+        stroke="var(--accent)"
         strokeWidth="2"
         strokeLinecap="round"
         initial={{ pathLength: still ? 1 : 0 }}
@@ -95,7 +95,7 @@ export default function GrowthVisual({ active, seen, still }: VisualProps) {
         x2={guide}
         y1="0"
         y2={H}
-        stroke="var(--color-line-strong)"
+        stroke="var(--line-strong)"
         style={{ opacity: hovering ? 1 : 0 }}
         className="transition-opacity duration-200"
       />
@@ -104,7 +104,7 @@ export default function GrowthVisual({ active, seen, still }: VisualProps) {
         <motion.circle
           cx={END.x}
           cy={END.y}
-          fill="var(--color-accent)"
+          fill="var(--accent)"
           initial={{ r: 4, opacity: 0.5 }}
           animate={{ r: 14, opacity: 0 }}
           transition={{ duration: 1.6, repeat: Infinity, ease: 'easeOut', delay: 1.8 }}
@@ -114,8 +114,8 @@ export default function GrowthVisual({ active, seen, still }: VisualProps) {
         cx={cx}
         cy={cy}
         r="4.5"
-        fill="var(--color-bg)"
-        stroke="var(--color-accent)"
+        fill="var(--bg)"
+        stroke="var(--accent)"
         strokeWidth="2"
         initial={{ opacity: still ? 1 : 0 }}
         animate={{ opacity: drawn ? 1 : 0 }}

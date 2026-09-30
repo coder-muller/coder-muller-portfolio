@@ -43,6 +43,8 @@ export type Dictionary = {
     closeMenu: string
     language: string
     skip: string
+    themeLight: string
+    themeDark: string
   }
   hero: {
     headline: [string, string]
@@ -133,6 +135,8 @@ const pt: Dictionary = {
     closeMenu: 'Fechar menu',
     language: 'Idioma',
     skip: 'Pular para o conteúdo',
+    themeLight: 'Ativar modo claro',
+    themeDark: 'Ativar modo escuro',
   },
   hero: {
     headline: ['Construo software', 'que as pessoas usam.'],
@@ -270,6 +274,8 @@ const en: Dictionary = {
     closeMenu: 'Close menu',
     language: 'Language',
     skip: 'Skip to content',
+    themeLight: 'Switch to light mode',
+    themeDark: 'Switch to dark mode',
   },
   hero: {
     headline: ['I build software', 'people actually use.'],
