@@ -86,14 +86,6 @@ html.lenis body {
   overscroll-behavior: contain;
 }
 
-@utility press {
-  transition: transform 160ms var(--ease-out);
-
-  &:active {
-    transform: scale(0.97);
-  }
-}
-
 @utility glass {
   background-color: oklch(0.2 0.005 60 / 0.72);
   backdrop-filter: blur(20px) saturate(160%);
