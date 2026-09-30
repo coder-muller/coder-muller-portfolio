@@ -12,12 +12,12 @@ import type { Project, ProjectId } from '../i18n/content'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { EASE_OUT } from '../lib/motion'
 import { LinkButton, WordsReveal } from './primitives'
-import KiaroMotif from './motifs/KiaroMotif'
+import LedgerMotif from './motifs/LedgerMotif'
 import MomentMotif from './motifs/MomentMotif'
 import NotchMotif from './motifs/NotchMotif'
 
 const MOTIFS: Record<ProjectId, ComponentType<{ active: boolean; still: boolean }>> = {
-  kiaro: KiaroMotif,
+  ledger: LedgerMotif,
   moment: MomentMotif,
   lightnotch: NotchMotif,
 }

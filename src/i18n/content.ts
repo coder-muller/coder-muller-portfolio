@@ -2,7 +2,7 @@ export type Locale = 'pt' | 'en'
 
 export type SectionId = 'top' | 'about' | 'projects' | 'services' | 'stack' | 'contact'
 
-export type ProjectId = 'kiaro' | 'moment' | 'lightnotch'
+export type ProjectId = 'ledger' | 'moment' | 'lightnotch'
 
 export type Project = {
   id: ProjectId
@@ -100,7 +100,7 @@ export const stackRows: string[][] = [
 ]
 
 const links = {
-  kiaro: 'https://kiaro.xyz',
+  ledger: 'https://ledger.muller.sh',
   moment: 'https://moment.muller.sh',
   lightnotch: 'https://github.com/coder-muller/light-notch',
 }
@@ -111,7 +111,7 @@ const pt: Dictionary = {
   meta: {
     title: 'Guilherme Müller, engenheiro de software full-stack',
     description:
-      'Engenheiro full-stack que constrói produtos web rápidos, bonitos e prontos para crescer. Criador do Kiaro, Moment e Light Notch.',
+      'Engenheiro full-stack que constrói produtos web rápidos, bonitos e prontos para crescer. Criador do Moment, Müller Ledger e Light Notch.',
   },
   sections: {
     top: 'Início',
@@ -152,32 +152,32 @@ const pt: Dictionary = {
       { value: 3, suffix: '+', label: 'anos de estrada', detail: 'Construindo produtos de ponta a ponta.' },
       { value: 10, suffix: '+', label: 'projetos entregues', detail: 'Rodando em produção, com usuários reais.' },
       { value: 200, suffix: '+', label: 'clientes atendidos', detail: 'Usando o que eu construo e mantenho.' },
-      { value: 3, label: 'produtos próprios', detail: 'Kiaro, Moment e Light Notch.' },
+      { value: 3, label: 'produtos próprios', detail: 'Moment, Müller Ledger e Light Notch.' },
     ],
   },
   projects: {
     title: 'Produtos que eu criei e mantenho.',
     items: [
       {
-        id: 'kiaro',
-        name: 'Kiaro',
-        href: links.kiaro,
-        linkLabel: 'Visitar kiaro.xyz',
-        status: 'Em produção',
-        live: true,
+        id: 'ledger',
+        name: 'Müller Ledger',
+        href: links.ledger,
+        linkLabel: 'Visitar ledger.muller.sh',
+        status: 'Beta',
+        live: false,
         year: '2026',
-        tagline: 'Gestão para quem vive de mensalidade.',
+        tagline: 'Controle de gastos que entende o que você escreve.',
         description:
-          'Contratos, clientes, cobranças recorrentes e um financeiro enxuto no mesmo lugar. Acaba com as planilhas, acompanha a inadimplência sozinho e mostra a receita real da empresa.',
-        stack: ['Next.js', 'shadcn/ui', 'Prisma', 'Better Auth'],
+          'Escreva “mercado 45,90” e ele vira um lançamento com categoria, carteira e data. Funciona também pelo Telegram, com relatórios por categoria e o saldo de cada carteira.',
+        stack: ['React', 'Elysia', 'Drizzle', 'Better Auth'],
       },
       {
         id: 'moment',
         name: 'Moment',
         href: links.moment,
         linkLabel: 'Visitar moment.muller.sh',
-        status: 'Em desenvolvimento',
-        live: false,
+        status: 'Em produção',
+        live: true,
         year: '2026',
         tagline: 'Uma agenda calma para pequenos negócios.',
         description:
@@ -250,7 +250,7 @@ const en: Dictionary = {
   meta: {
     title: 'Guilherme Müller, full-stack software engineer',
     description:
-      'Full-stack engineer building fast, polished web products that are ready to grow. Maker of Kiaro, Moment and Light Notch.',
+      'Full-stack engineer building fast, polished web products that are ready to grow. Maker of Moment, Müller Ledger and Light Notch.',
   },
   sections: {
     top: 'Home',
@@ -291,32 +291,32 @@ const en: Dictionary = {
       { value: 3, suffix: '+', label: 'years building', detail: 'Shipping products end to end.' },
       { value: 10, suffix: '+', label: 'projects shipped', detail: 'Running in production with real users.' },
       { value: 200, suffix: '+', label: 'clients served', detail: 'Using what I build and maintain.' },
-      { value: 3, label: 'products of my own', detail: 'Kiaro, Moment and Light Notch.' },
+      { value: 3, label: 'products of my own', detail: 'Moment, Müller Ledger and Light Notch.' },
     ],
   },
   projects: {
     title: 'Products I built and run.',
     items: [
       {
-        id: 'kiaro',
-        name: 'Kiaro',
-        href: links.kiaro,
-        linkLabel: 'Visit kiaro.xyz',
-        status: 'Live',
-        live: true,
+        id: 'ledger',
+        name: 'Müller Ledger',
+        href: links.ledger,
+        linkLabel: 'Visit ledger.muller.sh',
+        status: 'Beta',
+        live: false,
         year: '2026',
-        tagline: 'Management for subscription businesses.',
+        tagline: 'Expense tracking that understands what you type.',
         description:
-          "Contracts, customers, recurring billing and lean finances in one place. It replaces spreadsheets, tracks late payments on its own and shows the company's real revenue.",
-        stack: ['Next.js', 'shadcn/ui', 'Prisma', 'Better Auth'],
+          'Type “groceries 45.90” and it becomes an entry with category, wallet and date. It also works over Telegram, with category reports and a balance for every wallet.',
+        stack: ['React', 'Elysia', 'Drizzle', 'Better Auth'],
       },
       {
         id: 'moment',
         name: 'Moment',
         href: links.moment,
         linkLabel: 'Visit moment.muller.sh',
-        status: 'In development',
-        live: false,
+        status: 'Live',
+        live: true,
         year: '2026',
         tagline: 'A calm calendar for small businesses.',
         description:

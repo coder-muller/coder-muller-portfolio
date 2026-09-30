@@ -161,6 +161,7 @@ export default function NotchMotif({ active, still }: { active: boolean; still: 
       className="absolute inset-0 grid place-items-center [perspective:1400px]"
     >
       <motion.div
+        data-theme="dark"
         style={{ rotateX, rotateY }}
         className="relative w-[min(88%,560px)] [transform-style:preserve-3d]"
       >
