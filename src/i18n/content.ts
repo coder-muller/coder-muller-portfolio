@@ -176,7 +176,7 @@ const pt: Dictionary = {
     ],
   },
   projects: {
-    title: 'Produtos que eu criei e mantenho.',
+    title: 'Alguns dos meus produtos.',
     items: [
       {
         id: 'ledger',
@@ -186,9 +186,9 @@ const pt: Dictionary = {
         status: 'Beta',
         live: false,
         year: '2026',
-        tagline: 'Controle de gastos que entende o que você escreve.',
+        tagline: 'Controle financeiro simples de registrar.',
         description:
-          'Escreva “mercado 45,90” e ele vira um lançamento com categoria, carteira e data. Funciona também pelo Telegram, com relatórios por categoria e o saldo de cada carteira.',
+          'Basta escrever “mercado 45,90” para registrar um gasto com categoria, carteira e data. Também funciona pelo Telegram e oferece relatórios por categoria e o saldo de cada carteira.',
         stack: ['React', 'Elysia', 'Drizzle', 'Better Auth'],
       },
       {
@@ -199,9 +199,9 @@ const pt: Dictionary = {
         status: 'Em produção',
         live: true,
         year: '2026',
-        tagline: 'Uma agenda calma para pequenos negócios.',
+        tagline: 'Agenda e clientes em um só lugar.',
         description:
-          'Agenda, clientes, documentos e histórico de atendimentos em uma interface minimalista. Tem fila de espera, papéis por equipe e atualizações em tempo real em todas as abas abertas.',
+          'Organiza agendamentos, cadastro de clientes, documentos e histórico de atendimentos. Oferece fila de espera, permissões por equipe e atualização em tempo real para todos os usuários.',
         stack: ['Next.js 16', 'Drizzle', 'Better Auth', 'Cloudflare R2'],
       },
       {
@@ -212,9 +212,9 @@ const pt: Dictionary = {
         status: 'Beta',
         live: false,
         year: '2026',
-        tagline: 'O notch do MacBook virou um player do Spotify.',
+        tagline: 'Um player do Spotify no notch do MacBook.',
         description:
-          'App nativo para macOS. Mostra a capa do álbum e um equalizador que acompanha a música; um clique abre o player completo. AppKit puro, sem dependências e quase sem gastar CPU.',
+          'Aplicativo nativo para macOS que exibe a capa do álbum e um equalizador ao lado do notch. Com um clique, abre o player completo. É leve, de código aberto e consome poucos recursos.',
         stack: ['Swift', 'AppKit', 'Core Animation', 'Open source'],
       },
     ],
@@ -335,7 +335,7 @@ const en: Dictionary = {
     ],
   },
   projects: {
-    title: 'Products I built and run.',
+    title: 'Some of my products.',
     items: [
       {
         id: 'ledger',
@@ -345,9 +345,9 @@ const en: Dictionary = {
         status: 'Beta',
         live: false,
         year: '2026',
-        tagline: 'Expense tracking that understands what you type.',
+        tagline: 'Personal finance that is simple to log.',
         description:
-          'Type “groceries 45.90” and it becomes an entry with category, wallet and date. It also works over Telegram, with category reports and a balance for every wallet.',
+          'Just type “groceries 45.90” to log an expense with category, wallet and date. It also works over Telegram and offers reports by category and the balance of each wallet.',
         stack: ['React', 'Elysia', 'Drizzle', 'Better Auth'],
       },
       {
@@ -358,9 +358,9 @@ const en: Dictionary = {
         status: 'Live',
         live: true,
         year: '2026',
-        tagline: 'A calm calendar for small businesses.',
+        tagline: 'Scheduling and clients in one place.',
         description:
-          'Scheduling, customers, documents and visit history in one minimal interface. It has a waiting queue, team roles and real-time updates across every open tab.',
+          'It organizes appointments, client records, documents and visit history. It offers a waiting list, team permissions and real-time updates for every user.',
         stack: ['Next.js 16', 'Drizzle', 'Better Auth', 'Cloudflare R2'],
       },
       {
@@ -371,9 +371,9 @@ const en: Dictionary = {
         status: 'Beta',
         live: false,
         year: '2026',
-        tagline: 'The MacBook notch, turned into a Spotify player.',
+        tagline: 'A Spotify player in the MacBook notch.',
         description:
-          'A native macOS app. It shows the album cover and an equalizer that follows the music; one click opens the full player. Plain AppKit, no dependencies, close to idle on CPU.',
+          'A native macOS app that shows the album cover and an equalizer beside the notch. One click opens the full player. It is lightweight, open source and uses very few resources.',
         stack: ['Swift', 'AppKit', 'Core Animation', 'Open source'],
       },
     ],
