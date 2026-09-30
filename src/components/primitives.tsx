@@ -137,7 +137,7 @@ export function RollText({
     [...value].map((ch, i) => (
       <span
         key={i}
-        className={`inline-block whitespace-pre transition-transform duration-500 ease-out motion-reduce:transition-none ${trigger}`}
+        className={`inline-block pb-[0.12em] whitespace-pre transition-transform duration-500 ease-out motion-reduce:transition-none ${trigger}`}
         style={{ transitionDelay: `${i * 14}ms` }}
       >
         {ch}
@@ -145,9 +145,14 @@ export function RollText({
     ))
 
   return (
-    <span className={`relative inline-flex overflow-hidden ${className}`}>
+    <span className={`relative -mb-[0.12em] inline-flex flex-col overflow-hidden ${className}`}>
       <span className="sr-only">{active && swapTo ? swapTo : text}</span>
       <span aria-hidden>{letters(text)}</span>
+      {swapTo && (
+        <span aria-hidden className="invisible h-0 whitespace-pre">
+          {swapTo}
+        </span>
+      )}
       <span aria-hidden className="absolute top-full left-0">
         {letters(swapTo ?? text)}
       </span>
