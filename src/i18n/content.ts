@@ -147,12 +147,32 @@ const pt: Dictionary = {
   },
   about: {
     manifesto:
-      'Há mais de três anos eu transformo problemas de negócio em software. Cuido do produto inteiro, dos dados à interface, do primeiro commit ao deploy. O resultado são sistemas rápidos, claros e fáceis de manter, que continuam funcionando muito depois da entrega.',
+      'Há mais de três anos desenvolvo sistemas para empresas de diferentes tamanhos. Meu trabalho é entender o problema, propor a solução mais simples e entregar algo que a sua equipe consiga usar desde o primeiro dia.',
     stats: [
-      { value: 3, suffix: '+', label: 'anos de estrada', detail: 'Construindo produtos de ponta a ponta.' },
-      { value: 10, suffix: '+', label: 'projetos entregues', detail: 'Rodando em produção, com usuários reais.' },
-      { value: 200, suffix: '+', label: 'clientes atendidos', detail: 'Usando o que eu construo e mantenho.' },
-      { value: 3, label: 'produtos próprios', detail: 'Moment, Müller Ledger e Light Notch.' },
+      {
+        value: 3,
+        suffix: '+',
+        label: 'anos de experiência',
+        detail: 'Criando sistemas, aplicativos e sites.',
+      },
+      {
+        value: 10,
+        suffix: '+',
+        label: 'projetos entregues',
+        detail: 'Em funcionamento e com usuários reais.',
+      },
+      {
+        value: 500,
+        suffix: '+',
+        label: 'clientes atendidos',
+        detail: 'Pessoas e empresas que usam o que desenvolvo.',
+      },
+      {
+        value: 3,
+        suffix: '+',
+        label: 'produtos próprios',
+        detail: 'Entre eles, Moment, Müller Ledger e Light Notch.',
+      },
     ],
   },
   projects: {
@@ -286,12 +306,32 @@ const en: Dictionary = {
   },
   about: {
     manifesto:
-      'For over three years I have been turning business problems into software. I own the whole product, from data to interface, from the first commit to deploy. The result is fast, clear, maintainable systems that keep working long after handoff.',
+      'For more than three years I have been building systems for companies of every size. My job is to understand the problem, propose the simplest solution and deliver something your team can use from day one.',
     stats: [
-      { value: 3, suffix: '+', label: 'years building', detail: 'Shipping products end to end.' },
-      { value: 10, suffix: '+', label: 'projects shipped', detail: 'Running in production with real users.' },
-      { value: 200, suffix: '+', label: 'clients served', detail: 'Using what I build and maintain.' },
-      { value: 3, label: 'products of my own', detail: 'Moment, Müller Ledger and Light Notch.' },
+      {
+        value: 3,
+        suffix: '+',
+        label: 'years of experience',
+        detail: 'Building systems, apps and websites.',
+      },
+      {
+        value: 10,
+        suffix: '+',
+        label: 'projects delivered',
+        detail: 'Up and running with real users.',
+      },
+      {
+        value: 500,
+        suffix: '+',
+        label: 'clients served',
+        detail: 'People and companies using what I build.',
+      },
+      {
+        value: 3,
+        suffix: '+',
+        label: 'products of my own',
+        detail: 'Including Moment, Müller Ledger and Light Notch.',
+      },
     ],
   },
   projects: {
