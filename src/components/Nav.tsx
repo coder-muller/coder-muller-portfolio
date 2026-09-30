@@ -72,7 +72,7 @@ export default function Nav() {
           initial={reduce ? false : { opacity: 0, y: -28, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...ISLAND, opacity: { duration: 0.3 } }}
-          style={{ borderRadius: menuOpen ? 28 : 999 }}
+          style={{ borderRadius: 28 }}
           className={`glass pointer-events-auto flex overflow-hidden ring-1 ring-line ${
             menuOpen ? 'w-full max-w-md flex-col p-2' : 'items-center gap-1 p-1.5'
           }`}

@@ -34,7 +34,7 @@ export default function Footer() {
       <motion.p
         aria-hidden
         style={{ y }}
-        className="-mb-[0.18em] px-2 text-center text-[clamp(48px,11.4vw,200px)] leading-[0.9] font-semibold tracking-[-0.065em] whitespace-nowrap text-transparent select-none [background:linear-gradient(to_bottom,oklch(0.965_0.004_80/0.14),oklch(0.965_0.004_80/0.02))] [background-clip:text]"
+        className="-mb-[0.18em] px-2 text-center text-[clamp(48px,11.4vw,200px)] leading-[0.9] font-semibold tracking-[-0.065em] whitespace-nowrap bg-linear-to-b from-fg/15 to-fg/[0.02] bg-clip-text text-transparent select-none"
       >
         Guilherme Müller
       </motion.p>
