@@ -141,7 +141,7 @@ const pt: Dictionary = {
   hero: {
     headline: ['Tecnologia sob medida', 'para o seu negócio.'],
     subtext:
-      'Sou Guilherme Müller, desenvolvedor. Crio sistemas, aplicativos e sites com design cuidadoso e explico cada decisão com clareza.',
+      'Sou Guilherme Müller, desenvolvedor. Crio sistemas, aplicativos e sites que resolvem problemas reais.',
     primary: 'Vamos conversar',
     secondary: 'Ver projetos',
   },
@@ -280,7 +280,7 @@ const en: Dictionary = {
   hero: {
     headline: ['Custom technology', 'for your business.'],
     subtext:
-      "I'm Guilherme Müller, a developer. I build systems, apps and websites with careful design, and I explain every decision clearly.",
+      "I'm Guilherme Müller, a developer. I build systems, apps and websites that solve real problems.",
     primary: "Let's talk",
     secondary: 'See the work',
   },
