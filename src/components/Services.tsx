@@ -1,16 +1,12 @@
 import { useRef, type PointerEvent } from 'react'
-import { AppleLogoIcon, BrowserIcon, CloudIcon, FlowArrowIcon } from '@phosphor-icons/react'
-import type { Icon } from '@phosphor-icons/react'
+import { useInView, useReducedMotion } from 'motion/react'
 import { useLocale } from '../i18n/locale'
 import type { Service } from '../i18n/content'
 import { Reveal, WordsReveal } from './primitives'
-
-const ICONS: Record<Service['id'], Icon> = {
-  saas: CloudIcon,
-  custom: FlowArrowIcon,
-  web: BrowserIcon,
-  macos: AppleLogoIcon,
-}
+import GrowthVisual from './visuals/GrowthVisual'
+import FlowVisual from './visuals/FlowVisual'
+import BrowserVisual from './visuals/BrowserVisual'
+import DockVisual from './visuals/DockVisual'
 
 // Bento 7/5 e 5/7: as larguras alternam para o grid ter ritmo.
 const LAYOUT: Record<Service['id'], string> = {
@@ -50,8 +46,12 @@ export default function Services() {
 }
 
 function ServiceCard({ service }: { service: Service }) {
+  const { t } = useLocale()
   const ref = useRef<HTMLDivElement>(null)
-  const Icon = ICONS[service.id]
+  const reduce = useReducedMotion()
+  const active = useInView(ref, { amount: 0.3 })
+  const seen = useInView(ref, { amount: 0.5, once: true })
+  const props = { active, seen, still: !!reduce }
 
   // Só o próprio cartão recebe as variáveis: o brilho segue o ponteiro na borda.
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
@@ -66,7 +66,7 @@ function ServiceCard({ service }: { service: Service }) {
     <div
       ref={ref}
       onPointerMove={onPointerMove}
-      className="group relative isolate flex h-full min-h-[300px] flex-col justify-between gap-12 overflow-hidden rounded-[28px] bg-surface p-7 ring-1 ring-line lg:min-h-[340px] lg:p-9"
+      className="group relative isolate flex h-full flex-col justify-between gap-8 overflow-hidden rounded-[28px] bg-surface p-7 ring-1 ring-line lg:p-9"
     >
       {BACKDROP[service.id] && (
         <div aria-hidden className={`absolute inset-0 -z-10 ${BACKDROP[service.id]}`} />
@@ -80,9 +80,12 @@ function ServiceCard({ service }: { service: Service }) {
         className="pointer-events-none absolute inset-0 rounded-[inherit] p-px opacity-0 transition-opacity duration-500 group-hover:opacity-100 [mask:linear-gradient(black,black)_content-box_exclude,linear-gradient(black,black)] bg-[radial-gradient(260px_circle_at_var(--x,50%)_var(--y,50%),oklch(0.72_0.19_42/0.7),transparent_70%)]"
       />
 
-      <span className="grid size-12 place-items-center rounded-2xl bg-fg/[0.05] text-fg ring-1 ring-line ring-inset transition-[color,rotate,scale] duration-500 ease-out group-hover:-rotate-6 group-hover:scale-105 group-hover:text-accent">
-        <Icon size={22} weight="duotone" aria-hidden />
-      </span>
+      <div aria-hidden className="relative flex h-48 items-center justify-center lg:h-56">
+        {service.id === 'saas' && <GrowthVisual {...props} />}
+        {service.id === 'custom' && <FlowVisual {...props} labels={t.services.visuals.flow} />}
+        {service.id === 'web' && <BrowserVisual {...props} url={t.services.visuals.url} />}
+        {service.id === 'macos' && <DockVisual {...props} />}
+      </div>
 
       <div>
         <h3 className="text-[clamp(24px,2.3vw,32px)] leading-tight font-semibold tracking-[-0.035em] text-fg">
