@@ -24,9 +24,10 @@ export function readInitialLocale(): Locale {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored === 'pt' || stored === 'en') return stored
   } catch {
-    // storage bloqueado: segue para o idioma do navegador
+    // storage bloqueado: segue no idioma padrão
   }
-  return navigator.language.toLowerCase().startsWith('pt') ? 'pt' : 'en'
+  // Português é o padrão; inglês só quando escolhido no menu.
+  return 'pt'
 }
 
 export function persistLocale(locale: Locale) {
