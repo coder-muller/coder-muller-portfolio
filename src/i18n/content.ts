@@ -139,9 +139,9 @@ const pt: Dictionary = {
     themeDark: 'Ativar modo escuro',
   },
   hero: {
-    headline: ['Sistemas e sites', 'que dão gosto de usar.'],
+    headline: ['Tecnologia sob medida', 'para o seu negócio.'],
     subtext:
-      'Sou o Guilherme, desenvolvedor. Você traz a ideia, eu tiro do papel e explico cada passo sem tecniquês.',
+      'Sou Guilherme Müller, desenvolvedor. Crio sistemas, aplicativos e sites com design cuidadoso e explico cada decisão com clareza.',
     primary: 'Vamos conversar',
     secondary: 'Ver projetos',
   },
@@ -278,9 +278,9 @@ const en: Dictionary = {
     themeDark: 'Switch to dark mode',
   },
   hero: {
-    headline: ['Software and websites', 'that feel good to use.'],
+    headline: ['Custom technology', 'for your business.'],
     subtext:
-      "I'm Guilherme, a developer. You bring the idea, I make it real and walk you through every step in plain words.",
+      "I'm Guilherme Müller, a developer. I build systems, apps and websites with careful design, and I explain every decision clearly.",
     primary: "Let's talk",
     secondary: 'See the work',
   },
