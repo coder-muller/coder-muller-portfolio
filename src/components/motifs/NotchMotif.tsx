@@ -162,7 +162,7 @@ export default function NotchMotif({ active, still }: { active: boolean; still: 
     >
       <motion.div
         style={{ rotateX, rotateY }}
-        className="relative w-[min(86%,480px)] [transform-style:preserve-3d]"
+        className="relative w-[min(88%,560px)] [transform-style:preserve-3d]"
       >
         <div
           aria-hidden
@@ -174,7 +174,7 @@ export default function NotchMotif({ active, still }: { active: boolean; still: 
             <div className="relative aspect-[16/10] overflow-hidden rounded-t-[4px] rounded-b-[6px]">
               <div
                 aria-hidden
-                className="absolute inset-0 bg-[radial-gradient(80%_70%_at_15%_110%,oklch(0.62_0.2_32/0.75),transparent_70%),radial-gradient(70%_60%_at_95%_95%,oklch(0.45_0.16_350/0.7),transparent_70%),radial-gradient(90%_80%_at_60%_-10%,oklch(0.3_0.06_260),transparent_70%),oklch(0.14_0.01_300)]"
+                className="absolute inset-0 bg-[radial-gradient(80%_70%_at_15%_110%,oklch(0.62_0.2_32/0.75),transparent_70%),radial-gradient(70%_60%_at_95%_95%,oklch(0.45_0.16_350/0.7),transparent_70%),radial-gradient(90%_80%_at_60%_-10%,oklch(0.3_0.06_260),transparent_70%),linear-gradient(oklch(0.14_0.01_300),oklch(0.14_0.01_300))]"
               />
 
               <div className="absolute inset-x-0 top-0 flex h-[18px] items-center justify-between bg-[oklch(0.1_0.01_300/0.35)] px-2.5 text-[8px] text-fg/85 backdrop-blur-sm">
