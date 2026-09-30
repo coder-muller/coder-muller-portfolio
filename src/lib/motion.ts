@@ -5,6 +5,3 @@ export const EASE_DRAWER = [0.32, 0.72, 0, 1] as const
 
 export const SPRING_SOFT = { type: 'spring', duration: 0.6, bounce: 0.15 } as const
 export const SPRING_SNAPPY = { type: 'spring', duration: 0.45, bounce: 0.2 } as const
-
-/** @deprecated legado das seções antigas */
-export const EASE = EASE_OUT
