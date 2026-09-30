@@ -64,7 +64,7 @@ export default function BrowserVisual({ url, active, still }: VisualProps & { ur
         </div>
         <motion.span
           {...block(2)}
-          className="block aspect-[4/5] rounded-[10px] bg-[radial-gradient(90%_90%_at_30%_20%,oklch(0.72_0.19_42/0.55),transparent_70%),linear-gradient(160deg,oklch(0.3_0.02_40),oklch(0.2_0.01_60))]"
+          className="block aspect-[4/5] rounded-[10px] bg-[radial-gradient(90%_90%_at_30%_20%,oklch(0.72_0.19_42/0.55),transparent_70%),linear-gradient(160deg,var(--raised),var(--surface))]"
         />
       </div>
     </div>
