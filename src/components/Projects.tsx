@@ -1,117 +1,168 @@
-import { useEffect, useState } from 'react'
-import { motion, useReducedMotion } from 'motion/react'
-import { projects } from '../data/portfolio'
-import { SectionTitle } from './ui'
-import { EASE } from '../lib/motion'
+import { useRef, type ComponentType } from 'react'
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from 'motion/react'
+import { useLocale } from '../i18n/locale'
+import type { Project, ProjectId } from '../i18n/content'
+import { useMediaQuery } from '../hooks/useMediaQuery'
+import { EASE_OUT } from '../lib/motion'
+import { LinkButton, WordsReveal } from './primitives'
+import LedgerMotif from './motifs/LedgerMotif'
+import MomentMotif from './motifs/MomentMotif'
+import NotchMotif from './motifs/NotchMotif'
 
-// Sem hover (touch), os drawers ficam sempre abertos e os títulos preenchidos.
-function useCanHover() {
-  const [canHover, setCanHover] = useState(true)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const update = () => setCanHover(mq.matches)
-    update()
-    mq.addEventListener('change', update)
-    return () => mq.removeEventListener('change', update)
-  }, [])
-
-  return canHover
+const MOTIFS: Record<ProjectId, ComponentType<{ active: boolean; still: boolean }>> = {
+  ledger: LedgerMotif,
+  moment: MomentMotif,
+  lightnotch: NotchMotif,
 }
 
+const STICKY_TOP = 104
+const STICKY_STEP = 26
+
 export default function Projects() {
-  const [active, setActive] = useState<number | null>(null)
-  const canHover = useCanHover()
+  const { t } = useLocale()
   const reduce = useReducedMotion()
+  const canStack = useMediaQuery('(min-width: 1024px) and (min-height: 640px)')
+  const stack = canStack && !reduce
+  const listRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: listRef, offset: ['start start', 'end end'] })
+  const items = t.projects.items
 
   return (
-    <section id="projects" className="bg-bg px-[clamp(24px,5vw,80px)] py-[clamp(60px,10vw,120px)]">
-      <div className="mx-auto max-w-[1400px]">
-        <SectionTitle num="02" label="Projetos" />
+    <section id="projects" className="mx-auto max-w-[1400px] px-4 pt-8 pb-[clamp(96px,12vw,180px)] sm:px-8 lg:px-12">
+      <h2 className="max-w-[16ch] text-[clamp(38px,5.2vw,76px)] leading-[1] font-semibold tracking-[-0.045em] text-fg">
+        <WordsReveal text={t.projects.title} />
+      </h2>
 
-        <div>
-          {projects.map((p, i) => {
-            const open = !canHover || active === i
-            return (
-              <motion.a
-                key={p.name}
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: EASE, delay: i * 0.08 }}
-                viewport={{ once: true, margin: '-60px' }}
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive((cur) => (cur === i ? null : cur))}
-                onFocus={() => setActive(i)}
-                onBlur={() => setActive((cur) => (cur === i ? null : cur))}
-                className="project-link block border-b border-rule py-[clamp(28px,4vw,52px)] no-underline first:border-t"
-              >
-                <div className="flex flex-wrap items-baseline gap-x-6 gap-y-3 lg:flex-nowrap">
-                  <span className="project-index w-10 shrink-0 font-mono text-sm font-bold text-dim">
-                    0{i + 1}/
-                  </span>
-                  <h3 className="project-title min-w-0 flex-[1_1_55%] break-words font-display text-[clamp(40px,9vw,140px)] font-extrabold uppercase leading-[0.9] tracking-[-0.02em] lg:flex-1">
-                    {p.name}
-                  </h3>
-                  <span className="flex shrink-0 items-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-dim">
-                    {p.status === 'production' ? (
-                      <span className="status-live h-[7px] w-[7px] rounded-full bg-accent" />
-                    ) : (
-                      <span className="h-[7px] w-[7px] rounded-full border border-dim" />
-                    )}
-                    {p.meta}
-                  </span>
-                  <span
-                    className="project-arrow hidden shrink-0 font-display text-[clamp(28px,3vw,44px)] font-extrabold text-accent sm:inline-block"
-                    aria-hidden
-                  >
-                    ↗
-                  </span>
-                </div>
-
-                <motion.div
-                  initial={false}
-                  animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
-                  transition={reduce ? { duration: 0 } : { duration: 0.5, ease: EASE }}
-                  className="overflow-hidden"
-                >
-                  <div className="max-w-[680px] pt-6 lg:pl-16">
-                    <p className="font-display text-[17px] leading-[1.55] text-dim">
-                      {p.description}
-                    </p>
-                    <div className="pt-4 font-mono text-[11px] uppercase tracking-[0.05em] text-text">
-                      {p.pills.join(' · ')}
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.a>
-            )
-          })}
-
-          <motion.a
-            href="https://github.com/coder-muller"
-            target="_blank"
-            rel="noopener noreferrer"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.16 }}
-            viewport={{ once: true, margin: '-60px' }}
-            className="github-strip flex flex-wrap items-center justify-between gap-x-8 gap-y-2 border-b border-rule py-[clamp(20px,3vw,32px)] no-underline"
-          >
-            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-dim">
-              Open source · contínuo
-            </span>
-            <span className="strip-title flex items-baseline gap-4 font-display text-[clamp(20px,2.6vw,32px)] font-semibold text-bright">
-              Mais experimentos no GitHub
-              <span className="strip-arrow text-accent" aria-hidden>
-                ↗
-              </span>
-            </span>
-          </motion.a>
-        </div>
+      <div ref={listRef} className="mt-[clamp(48px,7vw,96px)] flex flex-col gap-4 lg:gap-0">
+        {items.map((project, i) => (
+          <ProjectCard
+            key={project.id}
+            project={project}
+            index={i}
+            total={items.length}
+            progress={scrollYProgress}
+            stack={stack}
+          />
+        ))}
       </div>
+
     </section>
+  )
+}
+
+function ProjectCard({
+  project,
+  index,
+  total,
+  progress,
+  stack,
+}: {
+  project: Project
+  index: number
+  total: number
+  progress: MotionValue<number>
+  stack: boolean
+}) {
+  const reduce = useReducedMotion()
+  const cardRef = useRef<HTMLElement>(null)
+  const inView = useInView(cardRef, { amount: 0.35 })
+  const behind = total - 1 - index
+  // Os cartões de trás encolhem e escurecem enquanto o próximo sobe por cima.
+  const scale = useTransform(progress, [index / total, 1], [1, 1 - behind * 0.05])
+  const shade = useTransform(progress, [index / total, 1], [0, behind * 0.28])
+  const Motif = MOTIFS[project.id]
+
+  return (
+    <div
+      className={stack ? 'sticky top-0 flex h-[100svh] items-start' : ''}
+      style={stack ? { paddingTop: STICKY_TOP + index * STICKY_STEP } : undefined}
+    >
+      <motion.article
+        ref={cardRef}
+        {...(stack
+          ? { style: { scale, transformOrigin: 'top center' } }
+          : {
+              initial: reduce ? false : { opacity: 0, transform: 'translateY(40px)' },
+              whileInView: { opacity: 1, transform: 'translateY(0px)' },
+              viewport: { once: true, margin: '0px 0px -10% 0px' },
+              transition: { duration: 0.9, ease: EASE_OUT },
+            })}
+        className={`relative grid w-full gap-3 overflow-hidden rounded-[32px] bg-surface p-3 ring-1 ring-line lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] ${
+          stack ? 'h-[min(640px,calc(100svh-190px))]' : ''
+        }`}
+      >
+        <div className="flex flex-col justify-between gap-10 p-4 sm:p-6 lg:p-8">
+          <div>
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-2 rounded-full py-1 pr-3 pl-2.5 font-mono text-[12px] text-muted ring-1 ring-line ring-inset">
+                {project.live ? (
+                  <span className="relative flex size-1.5" aria-hidden>
+                    <span className="absolute inset-0 animate-ping rounded-full bg-accent opacity-70 motion-reduce:hidden" />
+                    <span className="relative size-1.5 rounded-full bg-accent" />
+                  </span>
+                ) : (
+                  <span className="size-1.5 rounded-full bg-subtle" aria-hidden />
+                )}
+                {project.status}
+              </span>
+              <span className="font-mono text-[12px] text-subtle">{project.year}</span>
+            </div>
+
+            <h3 className="mt-6 text-[clamp(46px,5.4vw,82px)] leading-[0.92] font-semibold tracking-[-0.055em] text-fg">
+              {project.name}
+            </h3>
+            <p className="mt-4 text-[clamp(18px,1.6vw,22px)] leading-snug tracking-[-0.01em] text-fg">
+              {project.tagline}
+            </p>
+          </div>
+
+          <div>
+            <p className="max-w-[48ch] text-[15px] leading-relaxed text-muted">{project.description}</p>
+            <ul className="mt-5 flex flex-wrap gap-1.5">
+              {project.stack.map((tech) => (
+                <li
+                  key={tech}
+                  className="rounded-full bg-fg/[0.05] px-3 py-1 font-mono text-[11.5px] text-muted"
+                >
+                  {tech}
+                </li>
+              ))}
+            </ul>
+            <LinkButton
+              href={project.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="ghost"
+              className="mt-7"
+            >
+              {project.linkLabel}
+            </LinkButton>
+          </div>
+        </div>
+
+        <div
+          aria-hidden
+          className="relative isolate grid min-h-[340px] place-items-center overflow-hidden rounded-[20px] bg-bg ring-1 ring-line sm:min-h-[400px] lg:min-h-0"
+        >
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(50%_50%_at_50%_50%,oklch(0.72_0.19_42/0.08),transparent_75%)]" />
+          <Motif active={inView} still={!!reduce} />
+        </div>
+
+        {stack && (
+          <motion.div
+            aria-hidden
+            style={{ opacity: shade }}
+            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-bg"
+          />
+        )}
+      </motion.article>
+    </div>
   )
 }

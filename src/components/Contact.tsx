@@ -1,90 +1,145 @@
-import { motion, useReducedMotion } from 'motion/react'
-import { contactLinks } from '../data/portfolio'
-import { SectionTitle } from './ui'
-import { EASE } from '../lib/motion'
+import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react'
+import { AnimatePresence, motion, useReducedMotion, useSpring } from 'motion/react'
+import { ArrowUpRightIcon, CheckIcon, CopyIcon } from '@phosphor-icons/react'
+import { useLocale } from '../i18n/locale'
+import { EMAIL, socials } from '../i18n/content'
+import { Reveal, SwapArrow, WordsReveal } from './primitives'
 
-export default function Contact() {
+// O botão é puxado de leve pelo cursor e volta com mola quando ele sai.
+function MagneticLink({ href, children }: { href: string; children: ReactNode }) {
   const reduce = useReducedMotion()
+  const x = useSpring(0, { stiffness: 220, damping: 18, mass: 0.6 })
+  const y = useSpring(0, { stiffness: 220, damping: 18, mass: 0.6 })
+
+  const onMove = (e: PointerEvent<HTMLAnchorElement>) => {
+    if (reduce || e.pointerType !== 'mouse') return
+    const rect = e.currentTarget.getBoundingClientRect()
+    x.set((e.clientX - rect.left - rect.width / 2) * 0.28)
+    y.set((e.clientY - rect.top - rect.height / 2) * 0.4)
+  }
+
+  const reset = () => {
+    x.set(0)
+    y.set(0)
+  }
 
   return (
-    <section id="contact" className="bg-bg px-[clamp(24px,5vw,80px)] py-[clamp(80px,12vw,160px)]">
-      <div className="mx-auto max-w-[1400px]">
-        <SectionTitle num="04" label="Contato" />
+    <motion.a
+      href={href}
+      onPointerMove={onMove}
+      onPointerLeave={reset}
+      style={{ x, y }}
+      className="group inline-flex h-16 items-center gap-3 rounded-full bg-accent pr-6 pl-8 text-[17px] font-medium whitespace-nowrap text-accent-fg transition-[background-color,scale] duration-200 hover:bg-accent-hover active:scale-[0.96]"
+    >
+      {children}
+      <SwapArrow className="size-5" />
+    </motion.a>
+  )
+}
 
-        <a
-          href="mailto:guilhermemullerxx@gmail.com"
-          className="contact-cta block no-underline"
-          aria-label="Enviar email para guilhermemullerxx@gmail.com"
-        >
-          <motion.h2
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
-            className="font-display text-[clamp(44px,11vw,160px)] font-extrabold uppercase leading-[0.88] tracking-[-0.03em]"
+function CopyEmail() {
+  const { t } = useLocale()
+  const [copied, setCopied] = useState(false)
+  const timer = useRef<number>(undefined)
+
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL)
+    } catch {
+      window.location.href = `mailto:${EMAIL}`
+      return
+    }
+    setCopied(true)
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => setCopied(false), 2200)
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      className="group inline-flex h-16 max-w-full items-center gap-3 rounded-full pr-6 pl-7 text-[15px] text-fg ring-1 ring-line-strong ring-inset transition-[background-color,scale] duration-200 hover:bg-fg/[0.06] active:scale-[0.96]"
+    >
+      <span className="truncate font-mono text-[14px] text-muted">{EMAIL}</span>
+      <span className="relative grid size-5 shrink-0 place-items-center">
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.span
+            key={copied ? 'check' : 'copy'}
+            initial={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
+            transition={{ type: 'spring', duration: 0.3, bounce: 0 }}
+            className="grid place-items-center"
           >
-            <span className="block overflow-hidden">
-              <motion.span
-                variants={{
-                  hidden: { y: reduce ? 0 : '110%' },
-                  show: { y: 0, transition: { duration: 0.9, ease: EASE } },
-                }}
-                className="cta-plain block text-bright will-change-transform"
-              >
-                Vamos trabalhar
-              </motion.span>
-            </span>
-            <span className="block overflow-hidden pb-[0.05em]">
-              <motion.span
-                variants={{
-                  hidden: { y: reduce ? 0 : '110%' },
-                  show: { y: 0, transition: { duration: 0.9, ease: EASE, delay: 0.12 } },
-                }}
-                className="inline-flex items-baseline gap-[0.15em] will-change-transform"
-              >
-                <span className="inline-block bg-accent px-[0.08em] text-bg">Juntos.</span>
-                <span className="cta-arrow text-[0.5em] text-accent" aria-hidden>
-                  ↗
-                </span>
-              </motion.span>
-            </span>
-          </motion.h2>
-        </a>
+            {copied ? (
+              <CheckIcon weight="bold" className="size-4.5 text-accent" aria-hidden />
+            ) : (
+              <CopyIcon className="size-4.5" aria-hidden />
+            )}
+          </motion.span>
+        </AnimatePresence>
+      </span>
+      <span className="sr-only" aria-live="polite">
+        {copied ? t.contact.copied : t.contact.copy}
+      </span>
+    </button>
+  )
+}
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="mt-8 max-w-[480px] font-mono text-sm leading-[1.7] text-dim"
-        >
-          Projetos, colaborações ou uma boa ideia — me escreve. Respondo rápido.
-        </motion.p>
+export default function Contact() {
+  const { t } = useLocale()
 
-        <div className="mt-[clamp(48px,7vw,96px)] grid grid-cols-1 gap-px border-y border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
-          {contactLinks.map((link, i) => (
-            <motion.a
-              key={link.label}
-              href={link.href}
-              target={link.label === 'Email' ? '_self' : '_blank'}
-              rel={link.label === 'Email' ? undefined : 'noopener noreferrer'}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: EASE, delay: i * 0.08 }}
-              viewport={{ once: true, margin: '-40px' }}
-              className="contact-card flex flex-col gap-2 bg-bg p-6 no-underline"
-            >
-              <span className="flex items-center justify-between font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-dim">
-                {link.label}
-                <span className="card-arrow text-sm" aria-hidden>
-                  ↗
-                </span>
-              </span>
-              <span className="card-value break-all font-display text-[17px] font-semibold tracking-[-0.01em] text-bright">
-                {link.value}
-              </span>
-            </motion.a>
-          ))}
-        </div>
+  return (
+    <section id="contact" className="mx-auto max-w-[1400px] px-4 pb-24 sm:px-8 lg:px-12">
+      <div className="relative isolate overflow-hidden rounded-[40px] bg-surface px-6 py-16 ring-1 ring-line sm:px-12 sm:py-24 lg:px-20 lg:py-32">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[radial-gradient(60%_80%_at_85%_110%,oklch(0.72_0.19_42/0.22),transparent_70%),radial-gradient(40%_50%_at_0%_0%,color-mix(in_oklab,var(--fg)_4%,transparent),transparent_70%)]"
+        />
+
+        <h2 className="text-[clamp(48px,8.4vw,136px)] leading-[0.92] font-semibold tracking-[-0.055em] text-fg">
+          <WordsReveal text={t.contact.title[0]} className="block" />
+          <WordsReveal text={t.contact.title[1]} delay={0.12} className="block text-subtle" />
+        </h2>
+
+        <Reveal delay={0.2}>
+          <p className="mt-8 max-w-[40ch] text-[17px] leading-relaxed text-muted md:text-lg">
+            {t.contact.body}
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.3} className="mt-12 flex flex-wrap items-center gap-3">
+          <MagneticLink href={`mailto:${EMAIL}`}>{t.contact.primary}</MagneticLink>
+          <CopyEmail />
+        </Reveal>
+
+        <Reveal delay={0.4} className="mt-16 border-t border-line pt-8">
+          <p className="font-mono text-[12px] text-subtle">{t.contact.socialLabel}</p>
+          <ul className="mt-2 flex flex-wrap gap-x-8 gap-y-1">
+            {socials.map((s) => (
+              <li key={s.label}>
+                <a
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-1.5 py-2 text-[17px] text-fg"
+                >
+                  <span className="relative">
+                    {s.label}
+                    <span className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-accent transition-transform duration-300 ease-out group-hover:origin-left group-hover:scale-x-100" />
+                  </span>
+                  <ArrowUpRightIcon
+                    weight="bold"
+                    className="size-3.5 text-subtle transition-[color,translate] duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+                    aria-hidden
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
     </section>
   )

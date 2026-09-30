@@ -2,13 +2,57 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guilherme Müller — Desenvolvedor Web</title>
+    <meta name="theme-color" content="#0e0c0b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f8f6f3" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      try {
+        var theme = localStorage.getItem('theme')
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            m.setAttribute('content', theme === 'light' ? '#f8f6f3' : '#0e0c0b')
+          })
+        }
+      } catch (e) {}
+    </script>
+    <title>Guilherme Müller, tecnologia sob medida para o seu negócio</title>
     <meta
       name="description"
-      content="Desenvolvedor web full-stack focado em produtos SaaS e aplicações modernas."
+      content="Desenvolvedor que cria sistemas, aplicativos e sites que resolvem problemas reais. Criador do Moment, Müller Ledger e Light Notch."
     />
+    <meta name="author" content="Guilherme Müller" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:site_name" content="Guilherme Müller" />
+    <meta property="og:title" content="Guilherme Müller, tecnologia sob medida para o seu negócio" />
+    <meta
+      property="og:description"
+      content="Tecnologia sob medida para o seu negócio. Sistemas, aplicativos e sites que resolvem problemas reais."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Guilherme Müller, tecnologia sob medida para o seu negócio" />
+    <meta
+      name="twitter:description"
+      content="Tecnologia sob medida para o seu negócio. Sistemas, aplicativos e sites que resolvem problemas reais."
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Guilherme Müller",
+        "jobTitle": "Desenvolvedor",
+        "email": "mailto:guilhermecoelhomuller@gmail.com",
+        "sameAs": [
+          "https://github.com/coder-muller",
+          "https://www.linkedin.com/in/guilherme-cmuller",
+          "https://instagram.com/coder.muller"
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

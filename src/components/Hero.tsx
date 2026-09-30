@@ -1,80 +1,86 @@
+import { useRef, type ReactNode } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import { EASE } from '../lib/motion'
+import { ArrowDownIcon } from '@phosphor-icons/react'
+import { useLocale } from '../i18n/locale'
+import { EASE_OUT } from '../lib/motion'
+import EqualizerField from './EqualizerField'
+import { LinkButton, WordsReveal } from './primitives'
 
-function Letters({ text, delay = 0 }: { text: string; delay?: number }) {
+function Enter({ children, delay, className }: { children: ReactNode; delay: number; className?: string }) {
   const reduce = useReducedMotion()
   return (
-    <span className="inline-block overflow-hidden align-bottom">
-      {text.split('').map((ch, i) => (
-        <motion.span
-          key={i}
-          initial={reduce ? false : { y: '110%', rotate: 4 }}
-          animate={{ y: 0, rotate: 0 }}
-          transition={{ duration: 0.9, ease: EASE, delay: delay + i * 0.04 }}
-          className="inline-block will-change-transform"
-        >
-          {ch}
-        </motion.span>
-      ))}
-    </span>
+    <motion.div
+      className={className}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, transform: 'translateY(16px)', filter: 'blur(8px)' }}
+      animate={{ opacity: 1, transform: 'translateY(0px)', filter: 'blur(0px)' }}
+      transition={{ duration: 1, ease: EASE_OUT, delay }}
+    >
+      {children}
+    </motion.div>
   )
 }
 
 export default function Hero() {
+  const { t } = useLocale()
   const reduce = useReducedMotion()
-  const { scrollY } = useScroll()
-  const y1 = useTransform(scrollY, [0, 1000], [0, reduce ? 0 : 180])
-  const y2 = useTransform(scrollY, [0, 1000], [0, reduce ? 0 : -90])
+  const ref = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : -120])
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, reduce ? 1 : 0])
 
   return (
-    <section className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-[clamp(24px,5vw,80px)] pt-20 pb-[60px]">
-      <div className="absolute top-[-10%] left-[-10%] -z-10 h-[50vw] w-[50vw] bg-[radial-gradient(circle,#FF3B0020_0%,transparent_70%)] blur-[80px]" />
-
-      <motion.p
-        initial={reduce ? false : { opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="mb-6 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-accent"
-      >
-        <motion.span
-          initial={reduce ? false : { scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-          className="h-px w-10 origin-left bg-accent"
-        />
-        Engenheiro de Software
-      </motion.p>
-
-      <div className="relative z-[1]">
-        <motion.div style={{ y: y1 }}>
-          <h1 className="font-display text-[clamp(48px,15vw,200px)] font-extrabold uppercase leading-[0.85] tracking-[-0.03em] text-bright">
-            <Letters text="GUILHERME" delay={0.15} />
-          </h1>
-        </motion.div>
-
-        <motion.div style={{ y: y2 }}>
-          <h1 className="ml-0 flex flex-wrap items-baseline font-display text-[clamp(48px,15vw,200px)] font-extrabold uppercase leading-[0.85] tracking-[-0.03em] sm:ml-[5vw]">
-            <motion.span
-              initial={reduce ? false : { clipPath: 'inset(0 100% 0 0)' }}
-              animate={{ clipPath: 'inset(0 0% 0 0)' }}
-              transition={{ duration: 0.9, delay: 0.6, ease: EASE }}
-              className="inline-block bg-accent px-[0.08em] text-bg"
-            >
-              MÜLLER.
-            </motion.span>
-          </h1>
-        </motion.div>
-      </div>
+    <section
+      id="top"
+      ref={ref}
+      className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden"
+    >
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 -z-10 h-[70%] bg-[radial-gradient(60%_60%_at_50%_100%,oklch(0.72_0.19_42/0.16),transparent_70%)]"
+      />
 
       <motion.div
-        initial={reduce ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
-        className="absolute bottom-10 right-[clamp(24px,5vw,80px)] hidden rotate-180 items-center gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-dim [writing-mode:vertical-rl] sm:flex"
+        style={{ y, opacity }}
+        className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-end px-4 pt-32 pb-10 sm:px-8 md:pb-14 lg:px-12"
       >
-        <span>Scroll to explore</span>
-        <span className="h-[60px] w-px bg-dim" />
+        <h1 className="text-[clamp(44px,7.6vw,120px)] leading-[0.95] font-semibold tracking-[-0.05em] text-fg">
+          <WordsReveal text={t.hero.headline[0]} onMount delay={0.25} className="block" />
+          <WordsReveal
+            text={t.hero.headline[1]}
+            onMount
+            delay={0.4}
+            className="block text-subtle"
+          />
+        </h1>
+
+        <div className="mt-10 grid gap-8 md:mt-14 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+          <Enter delay={0.75}>
+            <p className="max-w-[46ch] text-[17px] leading-relaxed text-muted md:text-lg">
+              {t.hero.subtext}
+            </p>
+          </Enter>
+          <Enter delay={0.9} className="flex flex-wrap items-center gap-3">
+            <LinkButton href="#contact">{t.hero.primary}</LinkButton>
+            <LinkButton
+              href="#projects"
+              variant="ghost"
+              icon={
+                <ArrowDownIcon
+                  weight="bold"
+                  className="size-4 transition-transform duration-300 ease-out group-hover:translate-y-0.5"
+                  aria-hidden
+                />
+              }
+            >
+              {t.hero.secondary}
+            </LinkButton>
+          </Enter>
+        </div>
       </motion.div>
+
+      <div className="h-[26svh] min-h-40 w-full [mask-image:linear-gradient(to_bottom,transparent,black_35%),linear-gradient(to_right,transparent,black_12%,black_88%,transparent)] [mask-composite:intersect]">
+        <EqualizerField />
+      </div>
     </section>
   )
 }
