@@ -18,8 +18,7 @@ const LAYOUT: Record<Service['id'], string> = {
 
 const BACKDROP: Partial<Record<Service['id'], string>> = {
   saas: 'bg-[radial-gradient(color-mix(in_oklab,var(--fg)_9%,transparent)_1px,transparent_1px)] bg-[size:14px_14px] [mask-image:radial-gradient(80%_90%_at_100%_0%,black,transparent_70%)]',
-  macos:
-    'bg-[radial-gradient(70%_90%_at_100%_100%,oklch(0.72_0.19_42/0.16),transparent_70%)]',
+  macos: 'bg-[radial-gradient(70%_90%_at_100%_100%,oklch(0.72_0.19_42/0.16),transparent_70%)]',
 }
 
 export default function Services() {
@@ -92,13 +91,6 @@ function ServiceCard({ service }: { service: Service }) {
           {service.title}
         </h3>
         <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-muted">{service.body}</p>
-        <ul className="mt-6 flex flex-wrap gap-1.5">
-          {service.tags.map((tag) => (
-            <li key={tag} className="rounded-full bg-fg/[0.05] px-3 py-1 font-mono text-[11.5px] text-muted">
-              {tag}
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   )

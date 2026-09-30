@@ -21,7 +21,6 @@ export type Service = {
   id: 'saas' | 'custom' | 'web' | 'macos'
   title: string
   body: string
-  tags: string[]
 }
 
 export type Stat = {
@@ -220,31 +219,27 @@ const pt: Dictionary = {
     ],
   },
   services: {
-    title: 'O que eu posso construir para você.',
+    title: 'Como posso ajudar o seu negócio.',
     items: [
       {
         id: 'saas',
-        title: 'Produtos SaaS',
-        body: 'Do MVP ao produto maduro: login, planos e cobrança recorrente, várias empresas na mesma conta e painéis que acompanham o crescimento.',
-        tags: ['Next.js', 'Stripe', 'Better Auth'],
+        title: 'Seu próprio produto digital',
+        body: 'Do primeiro protótipo ao produto completo: cadastro, planos, cobrança recorrente e acompanhamento de resultados.',
       },
       {
         id: 'custom',
-        title: 'Sistemas sob medida',
-        body: 'Ferramentas internas que substituem planilhas e processos manuais, com cadastros, fluxos, relatórios e integrações.',
-        tags: ['PostgreSQL', 'APIs', 'Automação'],
+        title: 'Automação de processos',
+        body: 'Tarefas que hoje dependem de planilhas e retrabalho passam a funcionar em um sistema único, organizado e confiável.',
       },
       {
         id: 'web',
-        title: 'Sites e landing pages',
-        body: 'Páginas rápidas e bem acabadas, pensadas para converter, com animação e SEO feitos com cuidado.',
-        tags: ['React', 'Motion', 'SEO'],
+        title: 'Presença online',
+        body: 'Sites e páginas de apresentação rápidos, bonitos e fáceis de encontrar no Google.',
       },
       {
         id: 'macos',
-        title: 'Apps para macOS',
-        body: 'Utilitários nativos em Swift que vivem na barra de menus ou no notch, leves e integrados ao sistema.',
-        tags: ['Swift', 'AppKit'],
+        title: 'Aplicativos para Mac',
+        body: 'Ferramentas que ficam à mão no dia a dia, direto na barra de menus ou no notch do MacBook.',
       },
     ],
     visuals: { flow: ['Pedido', 'Aprovação', 'Relatório'], url: 'suaempresa.com.br' },
@@ -379,31 +374,27 @@ const en: Dictionary = {
     ],
   },
   services: {
-    title: 'What I can build for you.',
+    title: 'How I can help your business.',
     items: [
       {
         id: 'saas',
-        title: 'SaaS products',
-        body: 'From MVP to mature product: sign-in, plans and recurring billing, multiple companies per account and dashboards that grow with you.',
-        tags: ['Next.js', 'Stripe', 'Better Auth'],
+        title: 'Your own digital product',
+        body: 'From the first prototype to the complete product: sign-up, plans, recurring billing and tracking results.',
       },
       {
         id: 'custom',
-        title: 'Custom systems',
-        body: 'Internal tools that replace spreadsheets and manual work, with records, workflows, reports and integrations.',
-        tags: ['PostgreSQL', 'APIs', 'Automation'],
+        title: 'Process automation',
+        body: 'Tasks that depend on spreadsheets and rework today move into a single, organized and reliable system.',
       },
       {
         id: 'web',
-        title: 'Websites and landing pages',
-        body: 'Fast, well-crafted pages built to convert, with motion and SEO done right.',
-        tags: ['React', 'Motion', 'SEO'],
+        title: 'Online presence',
+        body: 'Fast, good-looking websites and presentation pages that are easy to find on Google.',
       },
       {
         id: 'macos',
-        title: 'macOS apps',
-        body: 'Native Swift utilities that live in the menu bar or the notch, light and at home in the system.',
-        tags: ['Swift', 'AppKit'],
+        title: 'Mac apps',
+        body: 'Tools that stay within reach every day, right in the menu bar or the MacBook notch.',
       },
     ],
     visuals: { flow: ['Request', 'Approval', 'Report'], url: 'yourcompany.com' },
