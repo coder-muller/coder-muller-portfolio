@@ -7,12 +7,11 @@ import {
   useTransform,
   type MotionValue,
 } from 'motion/react'
-import { GithubLogoIcon } from '@phosphor-icons/react'
 import { useLocale } from '../i18n/locale'
-import { LINKS, type Project, type ProjectId } from '../i18n/content'
+import type { Project, ProjectId } from '../i18n/content'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { EASE_OUT } from '../lib/motion'
-import { LinkButton, Reveal, WordsReveal } from './primitives'
+import { LinkButton, WordsReveal } from './primitives'
 import KiaroMotif from './motifs/KiaroMotif'
 import MomentMotif from './motifs/MomentMotif'
 import NotchMotif from './motifs/NotchMotif'
@@ -54,23 +53,6 @@ export default function Projects() {
         ))}
       </div>
 
-      <Reveal className="mt-14 flex flex-col gap-6 border-t border-line pt-8 md:flex-row md:items-center md:justify-between">
-        <p className="max-w-[52ch] text-[15px] leading-relaxed text-muted">{t.projects.more.lead}</p>
-        <div className="flex flex-wrap gap-3">
-          <LinkButton href={LINKS.veltro} target="_blank" rel="noopener noreferrer" variant="ghost">
-            {t.projects.more.veltro}
-          </LinkButton>
-          <LinkButton
-            href="https://github.com/coder-muller"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="ghost"
-            icon={<GithubLogoIcon weight="fill" className="size-4" aria-hidden />}
-          >
-            {t.projects.more.github}
-          </LinkButton>
-        </div>
-      </Reveal>
     </section>
   )
 }

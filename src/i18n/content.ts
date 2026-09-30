@@ -37,6 +37,8 @@ export type Dictionary = {
   nav: {
     items: { id: SectionId; label: string }[]
     cta: string
+    menu: string
+    close: string
     openMenu: string
     closeMenu: string
     language: string
@@ -56,11 +58,11 @@ export type Dictionary = {
   projects: {
     title: string
     items: Project[]
-    more: { lead: string; veltro: string; github: string }
   }
   services: {
     title: string
     items: Service[]
+    visuals: { flow: [string, string, string]; url: string }
   }
   stack: {
     title: string
@@ -75,7 +77,6 @@ export type Dictionary = {
   }
   footer: {
     rights: string
-    madeWith: string
     backToTop: string
   }
 }
@@ -101,7 +102,6 @@ const links = {
   kiaro: 'https://kiaro.xyz',
   moment: 'https://moment.muller.sh',
   lightnotch: 'https://github.com/coder-muller/light-notch',
-  veltro: 'https://veltro.vercel.app',
 }
 
 export const LINKS = links
@@ -128,6 +128,8 @@ const pt: Dictionary = {
       { id: 'contact', label: 'Contato' },
     ],
     cta: 'Vamos conversar',
+    menu: 'Menu',
+    close: 'Fechar',
     openMenu: 'Abrir menu',
     closeMenu: 'Fechar menu',
     language: 'Idioma',
@@ -194,11 +196,6 @@ const pt: Dictionary = {
         stack: ['Swift', 'AppKit', 'Core Animation', 'Open source'],
       },
     ],
-    more: {
-      lead: 'Também tem o Veltro, consolidação de carteiras de investimento, e outros experimentos.',
-      veltro: 'Conhecer o Veltro',
-      github: 'Ver GitHub',
-    },
   },
   services: {
     title: 'O que eu posso construir para você.',
@@ -228,6 +225,7 @@ const pt: Dictionary = {
         tags: ['Swift', 'AppKit'],
       },
     ],
+    visuals: { flow: ['Pedido', 'Aprovação', 'Relatório'], url: 'suaempresa.com.br' },
   },
   stack: {
     title: 'Ferramentas que eu uso todo dia',
@@ -242,7 +240,6 @@ const pt: Dictionary = {
   },
   footer: {
     rights: 'Guilherme Müller',
-    madeWith: 'Feito à mão com React e Motion.',
     backToTop: 'Voltar ao topo',
   },
 }
@@ -269,6 +266,8 @@ const en: Dictionary = {
       { id: 'contact', label: 'Contact' },
     ],
     cta: "Let's talk",
+    menu: 'Menu',
+    close: 'Close',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     language: 'Language',
@@ -335,11 +334,6 @@ const en: Dictionary = {
         stack: ['Swift', 'AppKit', 'Core Animation', 'Open source'],
       },
     ],
-    more: {
-      lead: 'There is also Veltro, an investment portfolio tracker, plus other experiments.',
-      veltro: 'Explore Veltro',
-      github: 'Browse GitHub',
-    },
   },
   services: {
     title: 'What I can build for you.',
@@ -369,6 +363,7 @@ const en: Dictionary = {
         tags: ['Swift', 'AppKit'],
       },
     ],
+    visuals: { flow: ['Request', 'Approval', 'Report'], url: 'yourcompany.com' },
   },
   stack: {
     title: 'Tools I use every day',
@@ -383,7 +378,6 @@ const en: Dictionary = {
   },
   footer: {
     rights: 'Guilherme Müller',
-    madeWith: 'Handmade with React and Motion.',
     backToTop: 'Back to top',
   },
 }
