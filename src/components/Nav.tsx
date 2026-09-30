@@ -75,7 +75,7 @@ export default function Nav() {
         )}
       </AnimatePresence>
 
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 md:pt-4">
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-[max(1rem,env(safe-area-inset-left))] pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-4">
         <motion.nav
           layout
           initial={reduce ? false : { opacity: 0, y: -28, scale: 0.9 }}
