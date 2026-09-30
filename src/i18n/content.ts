@@ -147,7 +147,7 @@ const pt: Dictionary = {
   },
   about: {
     manifesto:
-      'Há mais de três anos desenvolvo sistemas para empresas de diferentes tamanhos. Meu trabalho é entender o problema, propor a solução mais simples e entregar algo que a sua equipe consiga usar desde o primeiro dia.',
+      'Há mais de três anos desenvolvo sistemas para empresas de diferentes tamanhos. Meu trabalho é entender o problema, propor a solução mais adequada e entregar algo que a sua equipe consiga usar desde o primeiro dia.',
     stats: [
       {
         value: 3,
@@ -306,7 +306,7 @@ const en: Dictionary = {
   },
   about: {
     manifesto:
-      'For more than three years I have been building systems for companies of every size. My job is to understand the problem, propose the simplest solution and deliver something your team can use from day one.',
+      'For more than three years I have been building systems for companies of every size. My job is to understand the problem, propose the right solution and deliver something your team can use from day one.',
     stats: [
       {
         value: 3,
