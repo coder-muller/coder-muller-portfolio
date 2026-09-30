@@ -45,7 +45,6 @@ export type Dictionary = {
     skip: string
   }
   hero: {
-    status: string
     headline: [string, string]
     subtext: string
     primary: string
@@ -136,7 +135,6 @@ const pt: Dictionary = {
     skip: 'Pular para o conteúdo',
   },
   hero: {
-    status: 'Disponível para novos projetos',
     headline: ['Construo software', 'que as pessoas usam.'],
     subtext:
       'Sou Guilherme Müller, engenheiro full-stack. Do banco de dados à interface, entrego produtos rápidos, bonitos e prontos para crescer.',
@@ -274,7 +272,6 @@ const en: Dictionary = {
     skip: 'Skip to content',
   },
   hero: {
-    status: 'Available for new projects',
     headline: ['I build software', 'people actually use.'],
     subtext:
       "I'm Guilherme Müller, a full-stack engineer. From database to interface, I ship fast, polished products that are ready to grow.",

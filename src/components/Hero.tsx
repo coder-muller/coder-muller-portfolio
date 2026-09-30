@@ -43,17 +43,7 @@ export default function Hero() {
         style={{ y, opacity }}
         className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-end px-4 pt-32 pb-10 sm:px-8 md:pb-14 lg:px-12"
       >
-        <Enter delay={0.15}>
-          <p className="inline-flex items-center gap-2.5 rounded-full py-1.5 pr-3.5 pl-2.5 font-mono text-[12px] text-muted ring-1 ring-line ring-inset">
-            <span className="relative flex size-2" aria-hidden>
-              <span className="absolute inset-0 animate-ping rounded-full bg-accent opacity-60 motion-reduce:hidden" />
-              <span className="relative size-2 rounded-full bg-accent" />
-            </span>
-            {t.hero.status}
-          </p>
-        </Enter>
-
-        <h1 className="mt-7 text-[clamp(44px,7.6vw,120px)] leading-[0.95] font-semibold tracking-[-0.05em] text-fg">
+        <h1 className="text-[clamp(44px,7.6vw,120px)] leading-[0.95] font-semibold tracking-[-0.05em] text-fg">
           <WordsReveal text={t.hero.headline[0]} onMount delay={0.25} className="block" />
           <WordsReveal
             text={t.hero.headline[1]}
