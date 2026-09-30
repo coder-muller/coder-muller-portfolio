@@ -7,13 +7,11 @@ export default function LocaleFade({ children }: { children: ReactNode }) {
   const { locale } = useLocale()
   const reduce = useReducedMotion()
   const [scope, animate] = useAnimate<HTMLDivElement>()
-  const first = useRef(true)
+  const previous = useRef(locale)
 
   useEffect(() => {
-    if (first.current) {
-      first.current = false
-      return
-    }
+    if (previous.current === locale) return
+    previous.current = locale
     const el = scope.current
     const controls = animate(
       el,
