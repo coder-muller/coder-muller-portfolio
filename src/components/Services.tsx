@@ -6,19 +6,19 @@ import { Reveal, WordsReveal } from './primitives'
 import GrowthVisual from './visuals/GrowthVisual'
 import FlowVisual from './visuals/FlowVisual'
 import BrowserVisual from './visuals/BrowserVisual'
-import DockVisual from './visuals/DockVisual'
+import DashboardVisual from './visuals/DashboardVisual'
 
 // Bento 7/5 e 5/7: as larguras alternam para o grid ter ritmo.
 const LAYOUT: Record<Service['id'], string> = {
   saas: 'lg:col-span-7',
   custom: 'lg:col-span-5',
   web: 'lg:col-span-5',
-  macos: 'lg:col-span-7',
+  dashboards: 'lg:col-span-7',
 }
 
 const BACKDROP: Partial<Record<Service['id'], string>> = {
   saas: 'bg-[radial-gradient(color-mix(in_oklab,var(--fg)_9%,transparent)_1px,transparent_1px)] bg-[size:14px_14px] [mask-image:radial-gradient(80%_90%_at_100%_0%,black,transparent_70%)]',
-  macos: 'bg-[radial-gradient(70%_90%_at_100%_100%,oklch(0.72_0.19_42/0.16),transparent_70%)]',
+  dashboards: 'bg-[radial-gradient(70%_90%_at_100%_100%,oklch(0.72_0.19_42/0.16),transparent_70%)]',
 }
 
 export default function Services() {
@@ -83,7 +83,7 @@ function ServiceCard({ service }: { service: Service }) {
         {service.id === 'saas' && <GrowthVisual {...props} />}
         {service.id === 'custom' && <FlowVisual {...props} labels={t.services.visuals.flow} />}
         {service.id === 'web' && <BrowserVisual {...props} url={t.services.visuals.url} />}
-        {service.id === 'macos' && <DockVisual {...props} />}
+        {service.id === 'dashboards' && <DashboardVisual {...props} />}
       </div>
 
       <div>

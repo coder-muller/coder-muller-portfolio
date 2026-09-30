@@ -18,7 +18,7 @@ export type Project = {
 }
 
 export type Service = {
-  id: 'saas' | 'custom' | 'web' | 'macos'
+  id: 'saas' | 'custom' | 'web' | 'dashboards'
   title: string
   body: string
 }
@@ -237,9 +237,9 @@ const pt: Dictionary = {
         body: 'Sites e páginas de apresentação rápidos, bonitos e fáceis de encontrar no Google.',
       },
       {
-        id: 'macos',
-        title: 'Aplicativos para Mac',
-        body: 'Ferramentas que ficam à mão no dia a dia, direto na barra de menus ou no notch do MacBook.',
+        id: 'dashboards',
+        title: 'Painéis e relatórios',
+        body: 'Os números da empresa reunidos em um painel claro, atualizado e fácil de consultar na hora de decidir.',
       },
     ],
     visuals: { flow: ['Pedido', 'Aprovação', 'Relatório'], url: 'suaempresa.com.br' },
@@ -392,9 +392,9 @@ const en: Dictionary = {
         body: 'Fast, good-looking websites and presentation pages that are easy to find on Google.',
       },
       {
-        id: 'macos',
-        title: 'Mac apps',
-        body: 'Tools that stay within reach every day, right in the menu bar or the MacBook notch.',
+        id: 'dashboards',
+        title: 'Dashboards and reports',
+        body: "Your company's numbers gathered in a clear, up-to-date dashboard that is easy to check when it is time to decide.",
       },
     ],
     visuals: { flow: ['Request', 'Approval', 'Report'], url: 'yourcompany.com' },
