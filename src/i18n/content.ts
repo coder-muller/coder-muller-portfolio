@@ -133,7 +133,7 @@ const pt: Dictionary = {
   },
   hero: {
     status: 'Disponível para novos projetos',
-    headline: ['Eu construo software', 'que as pessoas usam de verdade.'],
+    headline: ['Construo software', 'que as pessoas usam.'],
     subtext:
       'Sou Guilherme Müller, engenheiro full-stack. Do banco de dados à interface, entrego produtos rápidos, bonitos e prontos para crescer.',
     primary: 'Vamos conversar',
