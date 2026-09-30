@@ -108,9 +108,9 @@ export const LINKS = links
 
 const pt: Dictionary = {
   meta: {
-    title: 'Guilherme Müller, engenheiro de software full-stack',
+    title: 'Guilherme Müller, tecnologia sob medida para o seu negócio',
     description:
-      'Engenheiro full-stack que constrói produtos web rápidos, bonitos e prontos para crescer. Criador do Moment, Müller Ledger e Light Notch.',
+      'Desenvolvedor que cria sistemas, aplicativos e sites que resolvem problemas reais. Criador do Moment, Müller Ledger e Light Notch.',
   },
   sections: {
     top: 'Início',
@@ -245,7 +245,7 @@ const pt: Dictionary = {
     visuals: { flow: ['Pedido', 'Aprovação', 'Relatório'], url: 'suaempresa.com.br' },
   },
   stack: {
-    title: 'Ferramentas que eu uso todo dia',
+    title: 'Ferramentas do dia a dia',
   },
   contact: {
     title: ['Vamos começar', 'o seu projeto?'],
@@ -263,9 +263,9 @@ const pt: Dictionary = {
 
 const en: Dictionary = {
   meta: {
-    title: 'Guilherme Müller, full-stack software engineer',
+    title: 'Guilherme Müller, custom technology for your business',
     description:
-      'Full-stack engineer building fast, polished web products that are ready to grow. Maker of Moment, Müller Ledger and Light Notch.',
+      'Developer building systems, apps and websites that solve real problems. Maker of Moment, Müller Ledger and Light Notch.',
   },
   sections: {
     top: 'Home',
@@ -400,7 +400,7 @@ const en: Dictionary = {
     visuals: { flow: ['Request', 'Approval', 'Report'], url: 'yourcompany.com' },
   },
   stack: {
-    title: 'Tools I use every day',
+    title: 'Everyday tools',
   },
   contact: {
     title: ['Ready to start', 'your project?'],
