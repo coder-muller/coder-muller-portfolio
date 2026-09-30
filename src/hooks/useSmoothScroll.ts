@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import Lenis from 'lenis'
+import { setLenis } from '../lib/scroll'
 
 export function useSmoothScroll() {
   useEffect(() => {
@@ -10,7 +11,11 @@ export function useSmoothScroll() {
       anchors: { offset: -24 },
       autoRaf: true,
     })
+    setLenis(lenis)
 
-    return () => lenis.destroy()
+    return () => {
+      setLenis(null)
+      lenis.destroy()
+    }
   }, [])
 }

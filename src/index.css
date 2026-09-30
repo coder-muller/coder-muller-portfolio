@@ -116,7 +116,38 @@ html.lenis body {
   }
 }
 
+/* logo: as barras só tocam quando o link está em hover ou foco */
+.logo-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transition: transform 300ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .logo-bar {
+    animation: logo-eq 0.55s ease-in-out infinite alternate;
+  }
+}
+
+.group:focus-visible .logo-bar {
+  animation: logo-eq 0.55s ease-in-out infinite alternate;
+}
+
+@keyframes logo-eq {
+  from {
+    transform: scaleY(1);
+  }
+
+  to {
+    transform: scaleY(0.45);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .logo-bar {
+    animation: none !important;
+  }
+
   .eq-bar {
     animation: none;
     transform: scaleY(0.6);

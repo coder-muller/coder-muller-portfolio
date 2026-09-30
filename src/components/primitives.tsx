@@ -113,6 +113,48 @@ export function CountUp({ value, suffix = '' }: { value: number; suffix?: string
   )
 }
 
+// Texto que rola letra a letra: sai por cima e a cópia entra por baixo.
+// Com `swapTo`, a cópia de baixo é outro texto e o `active` controla a troca.
+export function RollText({
+  text,
+  swapTo,
+  active,
+  className = '',
+}: {
+  text: string
+  swapTo?: string
+  active?: boolean
+  className?: string
+}) {
+  const trigger =
+    active === undefined
+      ? 'group-hover:-translate-y-full group-focus-visible:-translate-y-full'
+      : active
+        ? '-translate-y-full'
+        : ''
+
+  const letters = (value: string) =>
+    [...value].map((ch, i) => (
+      <span
+        key={i}
+        className={`inline-block whitespace-pre transition-transform duration-500 ease-out motion-reduce:transition-none ${trigger}`}
+        style={{ transitionDelay: `${i * 14}ms` }}
+      >
+        {ch}
+      </span>
+    ))
+
+  return (
+    <span className={`relative inline-flex overflow-hidden ${className}`}>
+      <span className="sr-only">{active && swapTo ? swapTo : text}</span>
+      <span aria-hidden>{letters(text)}</span>
+      <span aria-hidden className="absolute top-full left-0">
+        {letters(swapTo ?? text)}
+      </span>
+    </span>
+  )
+}
+
 // Seta que sai pelo canto e volta pelo lado oposto no hover.
 export function SwapArrow({ className = 'size-4' }: { className?: string }) {
   return (

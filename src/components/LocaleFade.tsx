@@ -27,5 +27,9 @@ export default function LocaleFade({ children }: { children: ReactNode }) {
     return () => controls.stop()
   }, [locale, reduce, animate, scope])
 
-  return <div ref={scope}>{children}</div>
+  return (
+    <div id="page" ref={scope}>
+      {children}
+    </div>
+  )
 }

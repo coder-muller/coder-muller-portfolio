@@ -1,55 +1,82 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import {
   AnimatePresence,
   motion,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
-  useSpring,
-  type Transition,
 } from 'motion/react'
-import { ArrowUpRightIcon, ListIcon, XIcon } from '@phosphor-icons/react'
+import { ArrowUpRightIcon } from '@phosphor-icons/react'
 import { useLocale } from '../i18n/locale'
-import type { Locale, SectionId } from '../i18n/content'
+import { EMAIL, socials, type Locale, type SectionId } from '../i18n/content'
 import { useActiveSection } from '../hooks/useActiveSection'
-import { useMediaQuery } from '../hooks/useMediaQuery'
-import { EASE_OUT, SPRING_SNAPPY } from '../lib/motion'
+import { EASE_DRAWER, EASE_IN_OUT, EASE_OUT } from '../lib/motion'
+import { lockScroll, scrollToId, unlockScroll } from '../lib/scroll'
+import LogoMark from './LogoMark'
+import { RollText } from './primitives'
 
 const SECTION_IDS: SectionId[] = ['top', 'about', 'projects', 'services', 'stack', 'contact']
 
-// A ilha se comporta como o notch do Light Notch: nasce compacta, se expande,
-// e no mobile vira o próprio menu. O `layout` anima a forma entre os estados.
-const ICON_SWAP = { type: 'spring', duration: 0.3, bounce: 0 } as const
-
-const ISLAND: Transition = { type: 'spring', duration: 0.55, bounce: 0.18 }
-
-const fadeIn = {
-  initial: { opacity: 0, filter: 'blur(4px)' },
-  animate: { opacity: 1, filter: 'blur(0px)' },
-  exit: { opacity: 0, filter: 'blur(4px)', transition: { duration: 0.12 } },
-}
+type Origin = { x: number; y: number; r: number }
 
 export default function Nav() {
   const { t } = useLocale()
   const reduce = useReducedMotion()
-  const isDesktop = useMediaQuery('(min-width: 768px)', true)
   const active = useActiveSection(SECTION_IDS)
-  const [booted, setBooted] = useState(false)
   const [open, setOpen] = useState(false)
-  const menuOpen = open && !isDesktop
+  const [origin, setOrigin] = useState<Origin>({ x: 0, y: 0, r: 0 })
+  const [scrolled, setScrolled] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const { scrollY } = useScroll()
+
+  useMotionValueEvent(scrollY, 'change', (y) => setScrolled(y > 40))
+
+  // O menu nasce do botão: o círculo cresce a partir do centro dele até cobrir
+  // o canto mais distante da tela.
+  const toggle = () => {
+    if (open) {
+      setOpen(false)
+      return
+    }
+    const rect = buttonRef.current?.getBoundingClientRect()
+    const x = rect ? rect.left + rect.width / 2 : window.innerWidth
+    const y = rect ? rect.top + rect.height / 2 : 0
+    const r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+    setOrigin({ x, y, r })
+    setOpen(true)
+  }
 
   useEffect(() => {
-    const id = window.setTimeout(() => setBooted(true), reduce ? 0 : 650)
-    return () => window.clearTimeout(id)
-  }, [reduce])
-
-  useEffect(() => {
-    if (!menuOpen) return
+    if (!open) return
+    const page = document.getElementById('page')
+    const button = buttonRef.current
+    lockScroll()
+    page?.setAttribute('inert', '')
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [menuOpen])
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      page?.removeAttribute('inert')
+      unlockScroll()
+      button?.focus({ preventScroll: true })
+    }
+  }, [open])
 
-  const close = () => setOpen(false)
+  const go = (id: SectionId) => (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    setOpen(false)
+    unlockScroll()
+    scrollToId(id)
+  }
+
+  const enter = (delay: number) =>
+    reduce
+      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.4, delay } }
+      : {
+          initial: { opacity: 0, transform: 'translateY(-12px)', filter: 'blur(6px)' },
+          animate: { opacity: 1, transform: 'translateY(0px)', filter: 'blur(0px)' },
+          transition: { duration: 0.8, ease: EASE_OUT, delay },
+        }
 
   return (
     <>
@@ -60,270 +87,254 @@ export default function Nav() {
         {t.nav.skip}
       </a>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            key="scrim"
-            aria-hidden
-            onClick={close}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-40 bg-bg/60 backdrop-blur-sm"
-          />
-        )}
-      </AnimatePresence>
-
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-[max(1rem,env(safe-area-inset-left))] pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-4">
-        <motion.nav
-          layout
-          initial={reduce ? false : { opacity: 0, y: -28, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ ...ISLAND, opacity: { duration: 0.3 } }}
-          style={{ borderRadius: 28 }}
-          className={`glass pointer-events-auto flex overflow-hidden ring-1 ring-line ${
-            menuOpen ? 'w-full max-w-md flex-col p-2' : 'items-center gap-1 p-1.5'
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+        {/* Desfoque progressivo: só aparece quando há conteúdo passando por baixo. */}
+        <div
+          aria-hidden
+          className={`absolute inset-x-0 top-0 -z-10 h-28 bg-linear-to-b from-bg/85 to-transparent backdrop-blur-md transition-opacity duration-500 [mask-image:linear-gradient(to_bottom,black_40%,transparent)] ${
+            scrolled && !open ? 'opacity-100' : 'opacity-0'
           }`}
-        >
-          <motion.div layout="position" className="flex items-center gap-1">
-            <Logo />
-            {!isDesktop && booted && (
-              <SectionLabel label={t.sections[active]} hidden={menuOpen} />
-            )}
-            {!isDesktop && booted && (
-              <motion.button
-                layout="position"
-                {...fadeIn}
-                type="button"
-                onClick={() => setOpen((o) => !o)}
-                aria-expanded={menuOpen}
-                aria-controls="island-menu"
-                aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
-                className="ml-auto grid size-11 place-items-center rounded-full text-fg transition-[background-color,scale] duration-200 hover:bg-fg/[0.08] active:scale-[0.96]"
-              >
-                <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.span
-                    key={menuOpen ? 'x' : 'list'}
-                    initial={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, scale: 0.25, filter: 'blur(4px)' }}
-                    transition={ICON_SWAP}
-                    className="grid place-items-center"
-                  >
-                    {menuOpen ? <XIcon size={20} /> : <ListIcon size={20} />}
-                  </motion.span>
-                </AnimatePresence>
-              </motion.button>
-            )}
+        />
+
+        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 md:pt-6 lg:px-12">
+          <motion.a
+            {...enter(0.1)}
+            href="#top"
+            onClick={go('top')}
+            aria-label={`Guilherme Müller, ${t.footer.backToTop.toLowerCase()}`}
+            className="group pointer-events-auto -mx-2 flex h-11 items-center gap-2.5 rounded-full px-2"
+          >
+            <LogoMark className="size-[22px]" />
+            <RollText
+              text="Guilherme Müller"
+              className="text-[15px] font-medium tracking-[-0.01em] text-fg"
+            />
+          </motion.a>
+
+          <motion.div {...enter(0.2)} className="pointer-events-auto flex items-center gap-5">
+            <SectionIndicator label={active === 'top' || open ? null : t.sections[active]} />
+            <button
+              ref={buttonRef}
+              type="button"
+              onClick={toggle}
+              aria-expanded={open}
+              aria-controls="site-menu"
+              aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
+              className="glass flex h-11 items-center gap-3 rounded-full pr-4 pl-5 text-[14px] font-medium text-fg ring-1 ring-line transition-[scale] duration-200 active:scale-[0.96]"
+            >
+              <RollText text={t.nav.menu} swapTo={t.nav.close} active={open} />
+              <span className="relative block h-2.5 w-3.5" aria-hidden>
+                <span
+                  className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-[top,rotate] duration-300 ease-out ${
+                    open ? 'top-[4.25px] rotate-45' : 'top-0'
+                  }`}
+                />
+                <span
+                  className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-[top,rotate] duration-300 ease-out ${
+                    open ? 'top-[4.25px] -rotate-45' : 'top-[8.5px]'
+                  }`}
+                />
+              </span>
+            </button>
           </motion.div>
-
-          {isDesktop && booted && <DesktopLinks active={active} />}
-
-          <AnimatePresence>
-            {menuOpen && <MobileMenu key="menu" active={active} onNavigate={close} />}
-          </AnimatePresence>
-        </motion.nav>
+        </div>
       </header>
+
+      <AnimatePresence>
+        {open && <MenuOverlay key="menu" origin={origin} active={active} onNavigate={go} />}
+      </AnimatePresence>
     </>
   )
 }
 
-function Logo() {
-  const { t } = useLocale()
-  const { scrollYProgress } = useScroll()
-  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28 })
-
+function SectionIndicator({ label }: { label: string | null }) {
   return (
-    <motion.a
-      layout="position"
-      href="#top"
-      aria-label={`Guilherme Müller, ${t.footer.backToTop.toLowerCase()}`}
-      className="relative grid size-11 shrink-0 place-items-center rounded-full bg-bg text-[13px] font-semibold tracking-[-0.02em] text-fg transition-[scale] duration-200 active:scale-[0.96]"
-    >
-      <svg viewBox="0 0 44 44" className="absolute inset-0 size-full -rotate-90" aria-hidden>
-        <circle cx="22" cy="22" r="20.5" fill="none" stroke="var(--color-line-strong)" strokeWidth="1" />
-        <motion.circle
-          cx="22"
-          cy="22"
-          r="20.5"
-          fill="none"
-          stroke="var(--color-accent)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          style={{ pathLength: progress }}
-        />
-      </svg>
-      gm
-    </motion.a>
-  )
-}
-
-function SectionLabel({ label, hidden }: { label: string; hidden: boolean }) {
-  return (
-    <motion.span
-      layout="position"
-      {...fadeIn}
+    <span
+      className="hidden h-11 items-center overflow-hidden font-mono text-[12px] text-muted sm:flex"
       aria-hidden
-      className={`relative flex h-11 min-w-24 items-center overflow-hidden pr-2 pl-2.5 font-mono text-[12px] tracking-[0.04em] text-muted uppercase transition-opacity duration-200 ${
-        hidden ? 'opacity-0' : ''
-      }`}
     >
       <AnimatePresence mode="popLayout" initial={false}>
-        <motion.span
-          key={label}
-          initial={{ opacity: 0, transform: 'translateY(10px)', filter: 'blur(4px)' }}
-          animate={{ opacity: 1, transform: 'translateY(0px)', filter: 'blur(0px)' }}
-          exit={{ opacity: 0, transform: 'translateY(-10px)', filter: 'blur(4px)' }}
-          transition={{ duration: 0.35, ease: EASE_OUT }}
-          className="block whitespace-nowrap"
-        >
-          {label}
-        </motion.span>
+        {label && (
+          <motion.span
+            key={label}
+            initial={{ opacity: 0, transform: 'translateY(10px)', filter: 'blur(4px)' }}
+            animate={{ opacity: 1, transform: 'translateY(0px)', filter: 'blur(0px)' }}
+            exit={{ opacity: 0, transform: 'translateY(-10px)', filter: 'blur(4px)' }}
+            transition={{ duration: 0.35, ease: EASE_OUT }}
+            className="flex items-center gap-2 whitespace-nowrap"
+          >
+            <span className="size-1.5 rounded-full bg-accent" />
+            {label}
+          </motion.span>
+        )}
       </AnimatePresence>
-    </motion.span>
+    </span>
   )
 }
 
-function DesktopLinks({ active }: { active: SectionId }) {
+function MenuOverlay({
+  origin,
+  active,
+  onNavigate,
+}: {
+  origin: Origin
+  active: SectionId
+  onNavigate: (id: SectionId) => (e: MouseEvent<HTMLAnchorElement>) => void
+}) {
   const { t } = useLocale()
+  const reduce = useReducedMotion()
+  const firstLink = useRef<HTMLAnchorElement>(null)
+  const at = `${origin.x}px ${origin.y}px`
+
+  useEffect(() => {
+    firstLink.current?.focus({ preventScroll: true })
+  }, [])
+
+  const shape = reduce
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1, transition: { duration: 0.25 } },
+        exit: { opacity: 0, transition: { duration: 0.2 } },
+      }
+    : {
+        initial: { clipPath: `circle(0px at ${at})` },
+        animate: {
+          clipPath: `circle(${origin.r}px at ${at})`,
+          transition: { duration: 0.8, ease: EASE_DRAWER },
+        },
+        exit: {
+          clipPath: `circle(0px at ${at})`,
+          transition: { duration: 0.55, ease: EASE_IN_OUT, delay: 0.1 },
+        },
+      }
+
+  const rise = (delay: number) => ({
+    initial: reduce ? { opacity: 0 } : { transform: 'translateY(110%)' },
+    animate: {
+      opacity: 1,
+      transform: 'translateY(0%)',
+      transition: { duration: 0.9, ease: EASE_OUT, delay },
+    },
+    exit: { opacity: 0, transition: { duration: 0.15 } },
+  })
+
+  const fade = (delay: number) => ({
+    initial: { opacity: 0, filter: 'blur(6px)' },
+    animate: { opacity: 1, filter: 'blur(0px)', transition: { duration: 0.6, delay } },
+    exit: { opacity: 0, transition: { duration: 0.15 } },
+  })
 
   return (
     <motion.div
-      className="flex items-center gap-1"
-      initial="hidden"
-      animate="show"
-      variants={{ show: { transition: { staggerChildren: 0.04, delayChildren: 0.08 } } }}
+      id="site-menu"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t.nav.menu}
+      data-lenis-prevent
+      {...shape}
+      className="fixed inset-0 z-40 overflow-y-auto bg-surface"
     >
-      <ul className="flex items-center pl-2">
-        {t.nav.items.map((item) => (
-          <motion.li key={item.id} variants={childFade}>
-            <a
-              href={`#${item.id}`}
-              aria-current={active === item.id ? 'true' : undefined}
-              className={`relative block rounded-full px-4 py-2.5 text-[14px] transition-colors duration-200 ${
-                active === item.id ? 'text-fg' : 'text-muted hover:text-fg'
-              }`}
-            >
-              {active === item.id && (
-                <motion.span
-                  layoutId="nav-active"
-                  transition={SPRING_SNAPPY}
-                  className="absolute inset-0 rounded-full bg-fg/[0.08]"
-                />
-              )}
-              <span className="relative">{item.label}</span>
-            </a>
-          </motion.li>
-        ))}
-      </ul>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_55%_at_0%_100%,oklch(0.72_0.19_42/0.16),transparent_70%)]"
+      />
 
-      <motion.div variants={childFade} className="mx-1 h-5 w-px bg-line-strong" aria-hidden />
+      <div className="relative mx-auto flex min-h-full max-w-[1400px] flex-col justify-between gap-16 px-4 pt-28 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-8 md:pt-36 lg:px-12">
+        <nav aria-label={t.nav.menu}>
+          <ul className="group/list flex flex-col">
+            {t.nav.items.map((item, i) => (
+              <li key={item.id} className="overflow-hidden">
+                <motion.a
+                  ref={i === 0 ? firstLink : undefined}
+                  href={`#${item.id}`}
+                  onClick={onNavigate(item.id)}
+                  aria-current={active === item.id ? 'true' : undefined}
+                  {...rise(0.32 + i * 0.06)}
+                  className="group flex items-center gap-4 py-1 text-[clamp(44px,9vw,120px)] leading-[1.02] font-semibold tracking-[-0.055em] text-fg transition-opacity duration-300 group-hover/list:opacity-35 hover:!opacity-100 focus-visible:!opacity-100"
+                >
+                  <RollText text={item.label} />
+                  {active === item.id ? (
+                    <span className="size-[0.14em] rounded-full bg-accent" aria-hidden />
+                  ) : null}
+                  <ArrowUpRightIcon
+                    weight="bold"
+                    className="ml-auto size-[0.4em] -translate-x-3 text-accent opacity-0 transition-[opacity,translate] duration-300 ease-out group-hover:translate-x-0 group-hover:opacity-100"
+                    aria-hidden
+                  />
+                </motion.a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-      <motion.div variants={childFade}>
-        <LocaleToggle id="desktop" />
-      </motion.div>
-
-      <motion.a
-        variants={childFade}
-        href="#contact"
-        className="group ml-1 inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-5 text-[14px] font-medium whitespace-nowrap text-accent-fg transition-[background-color,scale] duration-200 hover:bg-[oklch(0.76_0.19_42)] active:scale-[0.96]"
-      >
-        {t.nav.cta}
-        <ArrowUpRightIcon
-          weight="bold"
-          className="size-3.5 transition-transform duration-300 ease-out group-hover:rotate-45"
-          aria-hidden
-        />
-      </motion.a>
-    </motion.div>
-  )
-}
-
-const childFade = {
-  hidden: { opacity: 0, filter: 'blur(6px)', transform: 'translateY(4px)' },
-  show: {
-    opacity: 1,
-    filter: 'blur(0px)',
-    transform: 'translateY(0px)',
-    transition: { duration: 0.4, ease: EASE_OUT },
-  },
-}
-
-function MobileMenu({ active, onNavigate }: { active: SectionId; onNavigate: () => void }) {
-  const { t } = useLocale()
-
-  return (
-    <motion.div
-      id="island-menu"
-      layout="position"
-      initial="hidden"
-      animate="show"
-      exit={{ opacity: 0, transition: { duration: 0.12 } }}
-      variants={{ show: { transition: { staggerChildren: 0.05, delayChildren: 0.12 } } }}
-      className="px-3 pt-4 pb-2"
-    >
-      <ul className="flex flex-col">
-        {t.nav.items.map((item) => (
-          <motion.li key={item.id} variants={childFade}>
-            <a
-              href={`#${item.id}`}
-              onClick={onNavigate}
-              aria-current={active === item.id ? 'true' : undefined}
-              className="flex items-center justify-between py-3 text-[28px] font-medium tracking-[-0.03em] text-fg"
-            >
-              {item.label}
-              {active === item.id && <span className="size-2 rounded-full bg-accent" aria-hidden />}
-            </a>
-          </motion.li>
-        ))}
-      </ul>
-
-      <motion.div
-        variants={childFade}
-        className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4"
-      >
-        <LocaleToggle id="mobile" />
-        <a
-          href="#contact"
-          onClick={onNavigate}
-          className="inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-5 text-[15px] font-medium text-accent-fg transition-[scale] duration-200 active:scale-[0.96]"
+        <motion.div
+          {...fade(0.6)}
+          className="grid gap-10 border-t border-line pt-8 md:grid-cols-[auto_1fr] md:items-end md:gap-16"
         >
-          {t.nav.cta}
-          <ArrowUpRightIcon weight="bold" className="size-3.5" aria-hidden />
-        </a>
-      </motion.div>
+          <div>
+            <p className="font-mono text-[12px] text-subtle">{t.nav.language}</p>
+            <LocaleSwitch />
+          </div>
+
+          <div className="md:justify-self-end md:text-right">
+            <p className="font-mono text-[12px] text-subtle">{t.sections.contact}</p>
+            <a
+              href={`mailto:${EMAIL}`}
+              className="mt-3 inline-block text-[clamp(18px,2vw,24px)] font-medium tracking-[-0.02em] break-all text-fg underline decoration-line-strong decoration-1 underline-offset-[6px] transition-[text-decoration-color] duration-300 hover:decoration-accent"
+            >
+              {EMAIL}
+            </a>
+            <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1 md:justify-end">
+              {socials.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block py-2 text-[15px] text-muted transition-colors duration-200 hover:text-fg"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </motion.div>
+      </div>
     </motion.div>
   )
 }
 
-const LOCALES: { id: Locale; label: string; name: string }[] = [
-  { id: 'pt', label: 'PT', name: 'Português' },
-  { id: 'en', label: 'EN', name: 'English' },
+const LOCALES: { id: Locale; label: string }[] = [
+  { id: 'pt', label: 'Português' },
+  { id: 'en', label: 'English' },
 ]
 
-function LocaleToggle({ id }: { id: string }) {
+function LocaleSwitch() {
   const { locale, setLocale, t } = useLocale()
 
   return (
-    <div role="group" aria-label={t.nav.language} className="flex rounded-full bg-bg/60 p-1">
+    <div
+      role="group"
+      aria-label={t.nav.language}
+      className="mt-3 inline-flex rounded-full bg-bg/70 p-1 ring-1 ring-line"
+    >
       {LOCALES.map((l) => (
         <button
           key={l.id}
           type="button"
           lang={l.id}
           aria-pressed={locale === l.id}
-          aria-label={l.name}
           onClick={() => setLocale(l.id)}
-          className={`relative h-10 w-11 rounded-full font-mono text-[12px] transition-colors duration-200 ${
+          className={`relative h-11 rounded-full px-5 text-[15px] transition-colors duration-200 ${
             locale === l.id ? 'text-fg' : 'text-subtle hover:text-muted'
           }`}
         >
           {locale === l.id && (
             <motion.span
-              layoutId={`locale-${id}`}
-              transition={SPRING_SNAPPY}
-              className="absolute inset-0 rounded-full bg-fg/[0.1]"
+              layoutId="locale-pill"
+              transition={{ type: 'spring', duration: 0.45, bounce: 0.2 }}
+              className="absolute inset-0 rounded-full bg-fg/10"
             />
           )}
           <span className="relative">{l.label}</span>
