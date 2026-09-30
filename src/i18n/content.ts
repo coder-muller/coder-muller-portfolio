@@ -82,7 +82,7 @@ export type Dictionary = {
   }
 }
 
-export const EMAIL = 'guilhermemullerxx@gmail.com'
+export const EMAIL = 'guilhermecoelhomuller@gmail.com'
 
 export const socials = [
   { label: 'GitHub', handle: 'coder-muller', href: 'https://github.com/coder-muller' },
