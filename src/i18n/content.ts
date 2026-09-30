@@ -168,7 +168,7 @@ const pt: Dictionary = {
         detail: 'Pessoas e empresas que usam o que desenvolvo.',
       },
       {
-        value: 3,
+        value: 4,
         suffix: '+',
         label: 'produtos próprios',
         detail: 'Entre eles, Moment, Müller Ledger e Light Notch.',
@@ -327,7 +327,7 @@ const en: Dictionary = {
         detail: 'People and companies using what I build.',
       },
       {
-        value: 3,
+        value: 4,
         suffix: '+',
         label: 'products of my own',
         detail: 'Including Moment, Müller Ledger and Light Notch.',
