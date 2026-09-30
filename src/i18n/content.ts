@@ -248,12 +248,12 @@ const pt: Dictionary = {
     title: 'Ferramentas que eu uso todo dia',
   },
   contact: {
-    title: ['Tem um projeto', 'em mente?'],
-    body: 'Me conta a ideia, o prazo e onde você quer chegar. Eu respondo rápido.',
+    title: ['Vamos começar', 'o seu projeto?'],
+    body: 'Conte um pouco sobre o seu negócio e o que você precisa. A partir disso, preparo uma proposta sob medida.',
     primary: 'Vamos conversar',
     copy: 'Copiar email',
     copied: 'Email copiado',
-    socialLabel: 'Também estou em',
+    socialLabel: 'Acompanhe meu trabalho',
   },
   footer: {
     rights: 'Guilherme Müller',
@@ -403,12 +403,12 @@ const en: Dictionary = {
     title: 'Tools I use every day',
   },
   contact: {
-    title: ['Got a project', 'in mind?'],
-    body: 'Tell me the idea, the timeline and where you want to get. I reply fast.',
+    title: ['Ready to start', 'your project?'],
+    body: "Tell me a little about your business and what you need. From there, I'll put together a tailored proposal.",
     primary: "Let's talk",
     copy: 'Copy email',
     copied: 'Email copied',
-    socialLabel: 'Also on',
+    socialLabel: 'Follow my work',
   },
   footer: {
     rights: 'Guilherme Müller',
