@@ -101,7 +101,27 @@ html.lenis body {
   }
 }
 
+/* equalizador do motivo do Light Notch */
+.eq-bar {
+  animation: eq 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes eq {
+  from {
+    transform: scaleY(0.22);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .eq-bar {
+    animation: none;
+    transform: scaleY(0.6);
+  }
+
   *,
   *::before,
   *::after {
