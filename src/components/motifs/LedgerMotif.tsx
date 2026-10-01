@@ -45,6 +45,9 @@ const TICK = 110
 const ROUND = 38
 const HOLD = 6
 const ROWS = 3
+const ROW_H = 56
+const ROW_GAP = 8
+const OPACITY = [1, 0.78, 0.56, 0]
 
 // Uma frase solta vira lançamento: digita, confirma e entra no topo da lista.
 export default function LedgerMotif({ active, still }: { active: boolean; still: boolean }) {
@@ -60,7 +63,8 @@ export default function LedgerMotif({ active, still }: { active: boolean; still:
   const committed = still || within >= current.text.length + HOLD
   const typed = committed ? '' : current.text.slice(0, Math.min(within, current.text.length))
   const latest = committed ? round : round - 1
-  const rows = Array.from({ length: ROWS }, (_, i) => ({ key: latest - i, entry: at(latest - i) }))
+  // Uma linha extra, invisível, sai da lista antes de ser desmontada.
+  const rows = Array.from({ length: ROWS + 1 }, (_, i) => ({ key: latest - i, entry: at(latest - i) }))
 
   const money = new Intl.NumberFormat(locale === 'pt' ? 'pt-BR' : 'en-US', {
     style: 'currency',
@@ -92,21 +96,19 @@ export default function LedgerMotif({ active, still }: { active: boolean; still:
         </span>
       </div>
 
-      <ul className="flex flex-col gap-2">
-        <AnimatePresence initial={false} mode="popLayout">
+      <ul className="relative" style={{ height: ROWS * ROW_H + (ROWS - 1) * ROW_GAP }}>
+        <AnimatePresence initial={false}>
           {rows.map(({ key, entry }, i) => (
             <motion.li
               key={key}
-              layout
-              initial={{ opacity: 0, transform: 'translateY(-10px) scale(0.97)', filter: 'blur(4px)' }}
+              initial={{ opacity: 0, transform: 'translateY(-12px)' }}
               animate={{
-                opacity: 1 - i * 0.22,
-                transform: 'translateY(0px) scale(1)',
-                filter: 'blur(0px)',
+                opacity: OPACITY[i],
+                transform: `translateY(${i * (ROW_H + ROW_GAP)}px)`,
               }}
-              exit={{ opacity: 0, transition: { duration: 0.2 } }}
               transition={{ duration: 0.5, ease: EASE_OUT }}
-              className="flex items-center gap-3 rounded-xl bg-fg/[0.03] px-3 py-2.5 ring-1 ring-line"
+              style={{ height: ROW_H }}
+              className="absolute inset-x-0 top-0 flex items-center gap-3 rounded-xl bg-fg/[0.03] px-3 ring-1 ring-line"
             >
               <span
                 className={`grid size-8 shrink-0 place-items-center rounded-lg ${
