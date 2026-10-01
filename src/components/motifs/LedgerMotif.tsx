@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'motion/react'
+import type { CSSProperties } from 'react'
 import {
   ArrowElbowDownLeftIcon,
   CarIcon,
@@ -11,7 +11,6 @@ import {
 } from '@phosphor-icons/react'
 import { useLocale } from '../../i18n/locale'
 import type { Locale } from '../../i18n/content'
-import { EASE_OUT } from '../../lib/motion'
 import { useLoopTick } from './useLoopTick'
 
 type Entry = {
@@ -97,18 +96,18 @@ export default function LedgerMotif({ active, still }: { active: boolean; still:
       </div>
 
       <ul className="relative" style={{ height: ROWS * ROW_H + (ROWS - 1) * ROW_GAP }}>
-        <AnimatePresence initial={false}>
-          {rows.map(({ key, entry }, i) => (
-            <motion.li
+        {rows.map(({ key, entry }, i) => {
+          const y = i * (ROW_H + ROW_GAP)
+          return (
+            <li
               key={key}
-              initial={{ opacity: 0, transform: 'translateY(-12px)' }}
-              animate={{
+              className="ledger-row absolute inset-x-0 top-0 flex items-center gap-3 rounded-xl bg-fg/[0.03] px-3 ring-1 ring-line transition-[transform,opacity] duration-500 ease-out motion-reduce:animate-none motion-reduce:transition-none"
+              style={{
+                height: ROW_H,
                 opacity: OPACITY[i],
-                transform: `translateY(${i * (ROW_H + ROW_GAP)}px)`,
-              }}
-              transition={{ duration: 0.5, ease: EASE_OUT }}
-              style={{ height: ROW_H }}
-              className="absolute inset-x-0 top-0 flex items-center gap-3 rounded-xl bg-fg/[0.03] px-3 ring-1 ring-line"
+                transform: `translateY(${y}px)`,
+                '--y': `${y}px`,
+              } as CSSProperties}
             >
               <span
                 className={`grid size-8 shrink-0 place-items-center rounded-lg ${
@@ -130,9 +129,9 @@ export default function LedgerMotif({ active, still }: { active: boolean; still:
               >
                 {money.format(entry.amount)}
               </span>
-            </motion.li>
-          ))}
-        </AnimatePresence>
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

@@ -200,6 +200,18 @@ html.lenis body {
   }
 }
 
+/* lista do Ledger: linha nova entra de cima; as demais descem por transition */
+.ledger-row {
+  animation: ledger-row-in 0.5s var(--ease-out) backwards;
+}
+
+@keyframes ledger-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--y) - 12px));
+  }
+}
+
 /* logo: as barras só tocam quando o link está em hover ou foco */
 .logo-bar {
   transform-box: fill-box;
