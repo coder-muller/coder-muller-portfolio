@@ -153,7 +153,7 @@ export function RollText({
 
   return (
     <span
-      className={`relative -mb-[0.12em] inline-grid justify-items-center overflow-hidden ${className}`}
+      className={`relative -mr-[0.1em] -mb-[0.12em] inline-grid justify-items-center overflow-hidden pr-[0.1em] ${className}`}
     >
       <span className="sr-only">{active && swapTo ? swapTo : text}</span>
       <span aria-hidden className="col-start-1 row-start-1 whitespace-nowrap">
