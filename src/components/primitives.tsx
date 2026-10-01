@@ -37,7 +37,7 @@ export function WordsReveal({
     <motion.span initial="hidden" {...trigger} className={className}>
       {words.map((word, i) => (
         <span key={`${word}-${i}`}>
-          <span className="-mb-[0.14em] inline-block overflow-hidden pb-[0.14em] align-bottom">
+          <span className="-mt-[0.1em] -mr-[0.1em] -mb-[0.14em] inline-block overflow-hidden pt-[0.1em] pr-[0.1em] pb-[0.14em] align-bottom">
             <motion.span
               className={`inline-block will-change-transform ${wordClassName ?? ''}`}
               variants={{
@@ -153,7 +153,7 @@ export function RollText({
 
   return (
     <span
-      className={`relative -mb-[0.12em] inline-grid justify-items-center overflow-hidden ${className}`}
+      className={`relative -mr-[0.1em] -mb-[0.12em] inline-grid justify-items-center overflow-hidden pr-[0.1em] ${className}`}
     >
       <span className="sr-only">{active && swapTo ? swapTo : text}</span>
       <span aria-hidden className="col-start-1 row-start-1 whitespace-nowrap">
